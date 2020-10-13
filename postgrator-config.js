@@ -5,6 +5,7 @@ module.exports = {
   "driver": "pg",
   "host": process.env.MIGRATION_DATABASE_HOST,
   "port": process.env.MIGRATION_DATABASE_PORT,
-  "database": process.env.MIGRATION_DATABASE_NAME,
+  "database": process.env.NODE_ENV === 'test' ? 'zippal_test' : process.env.MIGRATION_DATABASE_NAME,
   "username": process.env.MIGRATION_DATABASE_USERNAME
 }
+
