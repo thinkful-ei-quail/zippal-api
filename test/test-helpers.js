@@ -16,6 +16,14 @@ function makeUsersArray() {
   ]
 }
 
+function makeConvoArray() {
+
+}
+
+function makeMessagesArray() {
+  
+}
+
 module.exports = {
   makeKnexInstance,
 
