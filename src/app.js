@@ -20,7 +20,7 @@ app.use(cors())
 app.use('/api/user', )
 app.use('/api/auth', authRouter)
 
-app.unsubscribe(errorHandler)
+app.use(errorHandler)
 
 
 module.exports = app
