@@ -1,7 +1,7 @@
 CREATE TABLE "conversation" (
   "id" SERIAL PRIMARY KEY,
-  "user_1" INTEGER REFERENCES "user"(id),
-  "user_2" INTEGER REFERENCES "user"(id),
+  "user_1" INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+  "user_2" INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
   "date_created" TIMESTAMPTZ DEFAULT now() NOT NULL,
   "is_active" BOOLEAN DEFAULT TRUE,
   "user_1_turn" BOOLEAN DEFAULT TRUE,
