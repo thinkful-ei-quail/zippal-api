@@ -17,6 +17,8 @@ conversationRouter
       req.user.id
     )
     .then((conversations) => {
-      res.json(conversations)
+      console.log(req.user.id)
     })
   })
+
+  module.exports = conversationRouter;
