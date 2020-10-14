@@ -30,11 +30,17 @@ const MessageService = {
             )
     },
 
-    //patch message for saving & patch message for sending - using different fields
+    //patch message for saving & patch message for sending - using different fields 
     updateMessage(db, id, newMessageFields) {
         return db('message')
             .where({id})
             .update(newMessageFields)
+            // -- returning message after update?
+            .returning('*')
+            .then(([message]) => message)
+            .then(message =>
+                MessageService.getByID(db, message.id)
+            )
     },
 
     serializeMessage(message) {
