@@ -48,8 +48,8 @@ function makeConvoArray() {
     },
     {
       id: 2,
-      user_1: 1,
-      user_2: 3,
+      user_1: 3,
+      user_2: 1,
     },
     {
       id: 3,
@@ -124,6 +124,13 @@ function makeMessagesArray() {
   ]
 }
 
+function makeTestFixtures () {
+  const testUsers = makeUsersArray();
+  const testConvos = makeConvoArray();
+  const testMessages = makeMessagesArray();
+  return {testUsers, testConvos, testMessages};
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
     subject: user.username,
@@ -136,9 +143,10 @@ function cleanTables(db) {
   return db.transaction(trx =>
     trx.raw(
       `TRUNCATE
-        "message",
+        "user",
         "conversation",
-        "user"`
+        "message"
+        `
     )
       .then(() =>
         Promise.all([
@@ -168,12 +176,34 @@ function seedUsers(db, users) {
   })
 }
 
+
+ function seedConvos(db, convos) {
+  return db.transaction(async (trx) => {   
+    try {
+      await trx.into('conversation').insert(convos)
+      await trx.raw(`SELECT setval('conversation_id_seq', ?)`, [
+      convos[convos.length-1].id
+    ])
+    } catch (error) {
+        console.log(error)
+    }
+    
+  })
+}
+
+function getExpectedConvos(user_id, convos) {
+  return convos.filter((convo) => convo.user_1 === user_id || convo.user_2 === user_id)
+}
+
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
   makeConvoArray,
   makeMessagesArray,
+  makeTestFixtures,
   makeAuthHeader,
   cleanTables,
   seedUsers,
+  seedConvos,
+  getExpectedConvos
 }
