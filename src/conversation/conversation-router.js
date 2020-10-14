@@ -17,8 +17,17 @@ conversationRouter
       req.user.id
     )
     .then((conversations) => {
-      console.log(req.user.id)
+      res.json(conversations)
     })
+  });
+
+  // single conversation
+  conversationRouter
+  .all(requireAuth)
+  .route('/:conversation_id')
+  .get((req, res) => {
+    res.send('testing')
   })
+  
 
   module.exports = conversationRouter;
