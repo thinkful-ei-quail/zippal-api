@@ -132,10 +132,37 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   return `Bearer ${token}`
 }
 
+function cleanTables(db) {
+  return db.transaction(trx =>
+    trx.raw(
+      `TRUNCATE
+        "message",
+        "conversation",
+        "user"`
+    )
+      .then(() =>
+        Promise.all([
+          trx.raw(`ALTER SEQUENCE message_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE conversation_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE user_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`SELECT setval('message_id_seq', 0)`),
+          trx.raw(`SELECT setval('conversation_id_seq', 0)`),
+          trx.raw(`SELECT setval('user_id_seq', 0)`),
+        ])
+      )
+  )
+}
+
+function seedUsers(db, users) {
+  
+}
+
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
   makeConvoArray,
   makeMessagesArray,
   makeAuthHeader,
+  cleanTables,
+  seedUsers,
 }
