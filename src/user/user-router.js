@@ -6,13 +6,13 @@ const userRouter = express.Router()
 const jsonBodyParser = express.json()
 
 userRouter
-  .route('/', jsonBodyParser, async (req, res, next) => {
+  .post('/', jsonBodyParser, async (req, res, next) => {
     const { password, username, display_name } = req.body
 
     for(const field of ['username', 'password']) {
       if(!req.body[field]) {
         return res.status(400).json({
-          error: `Missing ${field} in request body`
+          error: `Missing '${field}' in request body`
         })
       }
     }
