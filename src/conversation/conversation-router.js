@@ -5,26 +5,18 @@ const { requireAuth } = require('../middleware/jwt-auth')
 
 
 
-const userRouter = express.Router()
+const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
 
 conversationRouter
- .use(requireAuth)
- .use(async (req, res, next) => {
-   try {
-      const conversations = await ConversationService.getUsersConversations(
-        req.app.get('db'),
-        req.user.id
-      )
-      
-      if (!conversations) {
-        return res.status(404).json({
-          error: `You don't have any conversations`
-        })
-      }
-
-      next()
-   } catch (error) {
-     next(error)
-   }
- })
+  .route('/')
+  .all(requireAuth)
+  .get((req, res) => {
+    ConversationService.getUsersConversations(
+      req.app.get('db'),
+      req.user.id
+    )
+    .then((conversations) => {
+      res.json(conversations)
+    })
+  })
