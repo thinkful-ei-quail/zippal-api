@@ -18,5 +18,6 @@ CREATE TABLE "message" (
   "receiver_id" INTEGER REFERENCES "user"(id),
   "receiver_status" receiver_status DEFAULT 'Awaiting Message',
   "content" TEXT NOT NULL,
+  "date_sent" TIMESTAMPTZ DEFAULT NULL,
   "is_read" BOOLEAN DEFAULT FALSE
 );
