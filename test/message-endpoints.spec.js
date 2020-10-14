@@ -22,8 +22,14 @@ describe('Message Endpoints', () => {
 
     describe('GET /api/message', () => {
         context('Given there is no data', () => {
-            beforeEach('seed users', () => helpers.seedUsers())
+            beforeEach('seed users', () => helpers.seedUsers(db, testUsers))
+        })
+
+        it('responds with 200 and an empty array', () => {
+            return supertest(app)
+                .get('/api/message')
+                .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+                .expect(200, [])
         })
     })
-
 })
