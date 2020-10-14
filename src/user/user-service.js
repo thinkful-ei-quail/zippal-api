@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 
+// eslint-disable-next-line no-useless-escape
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
 const UserService = {
@@ -31,13 +32,13 @@ const UserService = {
     }
     return null
   },
-  hasPassword(password) {
+  hashPassword(password) {
     return bcrypt.hash(password, 12)
   },
   serializeUser(user) {
     return {
       id: user.id,
-      display_name: user.name,
+      display_name: user.display_name,
       username: user.username
     }
   },
