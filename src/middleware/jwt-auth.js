@@ -1,4 +1,4 @@
-const { JsonWebTokenError} = require('jsonwebtoken')
+const { JsonWebTokenError } = require('jsonwebtoken')
 const AuthService = require('../auth/auth-service')
 
 async function requireAuth(req,res,next){
