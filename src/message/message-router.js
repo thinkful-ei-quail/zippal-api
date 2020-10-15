@@ -64,7 +64,7 @@ messageRouter
 
   // open specific message
   .get((req, res) => {
-      res.json(MessageService.serializeMessage(res.message))
+    res.json(MessageService.serializeMessage(res.message))
   });
 
 messageRouter
@@ -73,25 +73,25 @@ messageRouter
   .all(checkMessageExists)
   // patching message with most recent save and updating content
   .patch(jsonBodyParser, (req, res, next) => {
-      const {content} = req.body
-      const updatedMessageField = {content}
+    const {content} = req.body
+    const updatedMessageField = {content}
 
-      const numberOfValues = Object.values(updatedMessageField).filter(Boolean).length
-      if (numberOfValues === 0)
-        return res.status(400).json({
-            error: { message: `Request body must contain content`}
-        })
+    const numberOfValues = Object.values(updatedMessageField).filter(Boolean).length
+    if (numberOfValues === 0)
+      return res.status(400).json({
+        error: { message: `Request body must contain content`}
+      })
 
-      MessageService.updateMessage(
-          req.app.get('db'),
-          req.params.message_id,
-          updatedMessageField
-      )
+    MessageService.updateMessage(
+      req.app.get('db'),
+      req.params.message_id,
+      updatedMessageField
+    )
 
       .then(message => {
-          res
-            .status(200)
-            .json(MessageService.serializeMessage(message))
+        res
+          .status(200)
+          .json(MessageService.serializeMessage(message))
       })
       .catch(next)
   });
@@ -109,17 +109,17 @@ messageRouter
     for(const [key, value] of Object.entries(updatedMessageFields))
       if (value == null)
         return res.status(400).json({
-            error: `Missing '${key}' in request body`
+          error: `Missing '${key}' in request body`
         })
     MessageService.updateMessage(
-        req.app.get('db'),
-        req.params.message_id,
-        updatedMessageFields
+      req.app.get('db'),
+      req.params.message_id,
+      updatedMessageFields
     )
       .then(message => {
-          res
-            .status(200)
-            .json(MessageService.serializeMessage(message)) 
+        res
+          .status(200)
+          .json(MessageService.serializeMessage(message)) 
       })
       .catch(next)
   });
@@ -137,17 +137,17 @@ messageRouter
     for(const [key, value] of Object.entries(updatedMessageFields))
       if (value == null)
         return res.status(400).json({
-            error: `Missing '${key}' in request body`
+          error: `Missing '${key}' in request body`
         })
     MessageService.updateMessage(
-        req.app.get('db'),
-        req.params.message_id, 
-        updatedMessageFields
+      req.app.get('db'),
+      req.params.message_id, 
+      updatedMessageFields
     )
       .then(message => {
-          res
-            .status(200)
-            .json(MessageService.serializeMessage(message))
+        res
+          .status(200)
+          .json(MessageService.serializeMessage(message))
       })
       .catch(next)
   });
@@ -165,7 +165,7 @@ async function checkMessageExists(req, res, next) {
     res.message = message;
     next();
   } catch (error) {
-      next(error)
+    next(error)
   }
 }
 
