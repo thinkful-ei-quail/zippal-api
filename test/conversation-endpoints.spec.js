@@ -25,11 +25,11 @@ describe.only('Conversation Endpoints', function () {
         helpers.seedUsers(db, testUsers)
       })
 
-      it('responds with 200 and an empty array', () => {
+      it('responds with 200 and empty arrays', () => {
         return supertest(app)
           .get('/api/conversation')
           .set('authorization', helpers.makeAuthHeader(testUsers[0]))
-          .expect(200, [])
+          .expect(200, { conversations: [], messages: [] })
       })
     })
 
@@ -37,9 +37,10 @@ describe.only('Conversation Endpoints', function () {
       beforeEach('insert conversations', async () => {
         await helpers.seedUsers(db, testUsers)
         await helpers.seedConvos(db, testConvos)
+        await helpers.seedMessages(db, testMessages)
       })
 
-      it('GET conversations responds with 200 and all of the conversations', () => {
+      it('responds with 200 and all of the conversations', () => {
         
         const expectedConvo = helpers.getExpectedConvos(testUsers[0].id, testConvos);
 
@@ -48,14 +49,31 @@ describe.only('Conversation Endpoints', function () {
           .set('authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200)
           .expect((res) => {
-            expect(res.body.length).to.eql(expectedConvo.length)
-            expect(res.body[0]).to.have.property('date_created')
-            expect(res.body[0]).to.have.property('is_active')
-            expect(res.body[0]).to.have.property('user_1_turn')
-            expect(res.body[0]).to.have.property('user_2_turn')
-            expect(res.body[0].is_active).to.be.true
+            expect(res.body.conversations.length).to.eql(expectedConvo.length)
+            expect(res.body.conversations[0]).to.have.property('date_created')
+            expect(res.body.conversations[0]).to.have.property('is_active')
+            expect(res.body.conversations[0]).to.have.property('user_1_turn')
+            expect(res.body.conversations[0]).to.have.property('user_2_turn')
+            expect(res.body.conversations[0].is_active).to.be.true
           })
 
+      })
+      it('responds with all messages related to active conversations', () => {
+        const expectedMessages = helpers.getExpectedMessages(
+          testUsers[0].id,
+          testConvos,
+          testMessages
+        )
+        
+        return supertest(app)
+          .get('/api/conversation')
+          .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(200)
+          .expect(res => {
+            expect(res.body).to.have.property('conversations')
+            expect(res.body).to.have.property('messages')
+            expect(res.body.messages.length).to.eql(expectedMessages.length)
+          })
       })
     })
   })
