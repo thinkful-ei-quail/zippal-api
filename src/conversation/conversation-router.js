@@ -2,10 +2,6 @@ const express = require('express')
 const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
-const testHelpers = require('../../test/test-helpers.js')
-const { request } = require('http')
-
-
 
 const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -64,6 +60,10 @@ conversationRouter
         const filteredUsers = availableUsers.filter((u) => {
          return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
         })
+
+        if(filteredUsers.length === 0) {
+          res.status(200).json({error: 'no available users'})
+        }
 
         const randomUser = filteredUsers[Math.floor(Math.random() * filteredUsers.length)]
 

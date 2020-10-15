@@ -81,17 +81,67 @@ describe.only('Conversation Endpoints', function () {
   describe(`GET /api/conversation/find`, () => {
 
     context(`Given there are no available users to start new conversations`, () => {
+      const invalidUsers = [{
+        id: 2,
+        username: 'test_user_2',
+        display_name: 'Testy',
+        password: 'Passw0rd!',
+        active_conversations: 5
+      },
+      {
+        id: 3,
+        username: 'test_user_3',
+        display_name: 'Testy',
+        password: 'Passw0rd!',
+        active_conversations: 5
+      },
+      {
+        id: 4,
+        username: 'test_user_4',
+        display_name: 'Testy',
+        password: 'Passw0rd!',
+        active_conversations: 5
+      }
+    ]
+
+    beforeEach('insert conversations', async () => {
+      await helpers.seedUsers(db,[testUsers[0], ...invalidUsers] )
+    })
+
+
       it(`should return 200 and message no one available to talk to`, () => {
         return supertest(app)
           .get('/api/conversation/find')
           .set('authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send([])
-          .expect(200)
+          .send({currentConversationIds: []})
+          .expect(200, {error: 'no available users'})
       })
     })
 
     context(`Give there are conversations in the database`, () => {
+      beforeEach('insert conversations', async () => {
+        await helpers.seedUsers(db, testUsers)
+        await helpers.seedConvos(db, testConvos)
+        await helpers.seedMessages(db, testMessages)
+      })
 
+      it(`Should respond 200 with a single random user to start new conversation with`, () => {
+        return supertest(app)
+          .get('/api/conversation/find')
+          .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send({currentConversationIds: [2, 3]})
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.id).does.not.eql(1)
+            expect(res.body.id).does.not.eql(2)
+            expect(res.body.id).does.not.eql(3)
+            expect(res.body).to.have.property('id')
+            expect(res.body).to.have.property('display_name')
+            expect(res.body).to.have.property('bio')
+            expect(res.body).to.have.property('country')
+            expect(res.body).to.have.property('fa_icon')
+          })
+      })
     })
   })
 
