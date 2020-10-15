@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
+const testHelpers = require('../../test/test-helpers.js')
 
 
 
@@ -11,23 +12,42 @@ const jsonBodyParser = express.json()
 conversationRouter
   .route('/')
   .all(requireAuth)
-  .get((req, res) => {
-    ConversationService.getUsersConversations(
-      req.app.get('db'),
-      req.user.id
-    )
-    .then((conversations) => {
-      res.json(conversations)
-    })
+  .get(async (req, res, next) => {
+    try {
+      const conversations = await ConversationService.getUsersConversations(
+        req.app.get('db'),
+        req.user.id
+      )
+
+      const messages = await Promise.all(conversations.map(convo => 
+        ConversationService.getConversationMessages(
+          req.app.get('db'),
+          convo.id
+        ))
+      )  
+      
+      res.json({ conversations, messages })
+      next()
+
+    } catch(error) {
+      next(error)
+    }
   });
 
-  // single conversation
-  conversationRouter
+// single conversation
+conversationRouter
   .all(requireAuth)
   .route('/:conversation_id')
-  .get((req, res) => {
-    res.send('testing')
+  .get(async (req, res, next) => {
+    try {
+
+      res.send('testing')
+      next()
+
+    } catch(error) {
+      next(error)
+    }
   })
   
 
-  module.exports = conversationRouter;
+module.exports = conversationRouter;
