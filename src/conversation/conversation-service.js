@@ -49,6 +49,17 @@ const ConversationService = {
 
   getAvailableUsers(db) {
     // return an array of user ids that are open for pairing
+    return db
+      .from('user')
+      .select(
+        'id',
+        'display_name',
+        'username',
+        'bio',
+        'country',
+        'fa_icon'
+      )
+      .where('active_conversations', '<', 5)
   },
 
   beginNewConversation(db, newConversation) {
