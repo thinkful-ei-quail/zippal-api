@@ -49,8 +49,6 @@ const ConversationService = {
 
   getAvailableUsers(db) {
     // return an array of user ids that are open for pairing
-<<<<<<< HEAD
-=======
     return db
       .from('user')
       .select(
@@ -62,7 +60,6 @@ const ConversationService = {
         'fa_icon'
       )
       .where('active_conversations', '<', 5)
->>>>>>> 64d6325b2f3a52eddeff249925b1bd8e31f290ed
   },
 
   beginNewConversation(db, newConversation) {
