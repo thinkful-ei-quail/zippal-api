@@ -16,25 +16,29 @@ function makeUsersArray() {
       id: 1,
       username: 'test_user_1',
       display_name: 'Testy',
-      password: 'Passw0rd!'
+      password: 'Passw0rd!',
+      active_conversations: 2
     },
     {
       id: 2,
       username: 'test_user_2',
       display_name: 'Test_boi',
-      password: 'Passw0rd!'
+      password: 'Passw0rd!',
+      active_conversations: 3
     },
     {
       id: 3,
       username: 'test_user_3',
       display_name: 'Test_gurl',
-      password: 'Passw0rd!'
+      password: 'Passw0rd!',
+      active_conversations: 3
     },
     {
       id: 4,
       username: 'test_user_4',
       display_name: 'Test_bot',
-      password: 'Passw0rd!'
+      password: 'Passw0rd!',
+      active_conversations: 1
     },
   ]
 }
