@@ -102,11 +102,11 @@ describe('Conversation Endpoints', function () {
         password: 'Passw0rd!',
         active_conversations: 5
       }
-    ]
+      ]
 
-    beforeEach('insert conversations', async () => {
-      await helpers.seedUsers(db,[testUsers[0], ...invalidUsers] )
-    })
+      beforeEach('insert conversations', async () => {
+        await helpers.seedUsers(db,[testUsers[0], ...invalidUsers] )
+      })
 
 
       it(`should return 200 and message no one available to talk to`, () => {

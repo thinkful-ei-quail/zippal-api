@@ -54,35 +54,35 @@ conversationRouter
     }
   })
 
-  // find a random person available
-  // then start new conversation (or not)
-  conversationRouter
-    .route('/find')
-    .all(requireAuth)
-    // get available users
-    .get(jsonBodyParser, async (req, res, next) => {
-      const { currentConversationIds } = req.body // array of ids
-      try {
-        const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
-        const filteredUsers = availableUsers.filter((u) => {
-         return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
-        })
+// find a random person available
+// then start new conversation (or not)
+conversationRouter
+  .route('/find')
+  .all(requireAuth)
+// get available users
+  .get(jsonBodyParser, async (req, res, next) => {
+    const { currentConversationIds } = req.body // array of ids
+    try {
+      const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
+      const filteredUsers = availableUsers.filter((u) => {
+        return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
+      })
 
-        // if every user has 5 conversations already
-        if(filteredUsers.length === 0) {
-          res.status(200).json({error: 'no available users'})
-        }
-
-        const randomUser = filteredUsers[Math.floor(Math.random() * filteredUsers.length)]
-
-        res.status(200).json(randomUser)
-
-        next()
-
-      } catch (error) {
-        next(error)
+      // if every user has 5 conversations already
+      if(filteredUsers.length === 0) {
+        res.status(200).json({error: 'no available users'})
       }
-    })
+
+      const randomUser = filteredUsers[Math.floor(Math.random() * filteredUsers.length)]
+
+      res.status(200).json(randomUser)
+
+      next()
+
+    } catch (error) {
+      next(error)
+    }
+  })
 
 // accept conversation and then do post
 // or look for another person to pair with
@@ -115,7 +115,7 @@ conversationRouter
   
   })
   
-  // todo establish endpoint for ending a conversation
+// todo establish endpoint for ending a conversation
  
 
 
