@@ -26,18 +26,18 @@ messageRouter
     const {
       conversation_id,
       sender_id,
-      sender_status,
+      // sender_status, - will use table default, not getting from client
       receiver_id,
-      receiver_status,
+      // receiver_status, - will use table default, not getting from client
       content,
     } = req.body;
 
     const newMessage = {
       conversation_id,
       sender_id,
-      sender_status,
+      // sender_status, - will use table default
       receiver_id,
-      receiver_status,
+      // receiver_status, - will use table default
       content,
     };
 
@@ -62,9 +62,18 @@ messageRouter
   .all(requireAuth)
   .all(checkMessageExists)
 
-  // open specific message
+  // open specific message - need specific id ... from params, use getbyID
   .get((req, res) => {
-      res.json(MessageService.serializeMessage(res.message))
+      MessageService.getByID(
+        req.app.get('db'),
+        req.params.message_id
+      )
+       .then(message => 
+         res
+         .status(200)
+         .json(MessageService.serializeMessage(message))
+       )
+      
   });
 
 messageRouter
