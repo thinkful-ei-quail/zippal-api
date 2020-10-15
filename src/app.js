@@ -8,7 +8,6 @@ const authRouter = require('./auth/auth-router')
 const userRouter = require('./user/user-router')
 const conversationRouter = require('./conversation/conversation-router')
 const errorHandler = require('./middleware/error-handler')
-const userRouter = require('./user/user-router')
 
 const app = express()
 
