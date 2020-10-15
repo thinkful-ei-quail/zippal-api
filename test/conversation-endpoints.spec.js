@@ -3,7 +3,7 @@ const supertest = require('supertest');
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe.only('Conversation Endpoints', function () {
+describe('Conversation Endpoints', function () {
   let db
 
   const {testUsers, testConvos, testMessages } = helpers.makeTestFixtures();
@@ -81,17 +81,67 @@ describe.only('Conversation Endpoints', function () {
   describe(`GET /api/conversation/find`, () => {
 
     context(`Given there are no available users to start new conversations`, () => {
+      const invalidUsers = [{
+        id: 2,
+        username: 'test_user_2',
+        display_name: 'Testy',
+        password: 'Passw0rd!',
+        active_conversations: 5
+      },
+      {
+        id: 3,
+        username: 'test_user_3',
+        display_name: 'Testy',
+        password: 'Passw0rd!',
+        active_conversations: 5
+      },
+      {
+        id: 4,
+        username: 'test_user_4',
+        display_name: 'Testy',
+        password: 'Passw0rd!',
+        active_conversations: 5
+      }
+    ]
+
+    beforeEach('insert conversations', async () => {
+      await helpers.seedUsers(db,[testUsers[0], ...invalidUsers] )
+    })
+
+
       it(`should return 200 and message no one available to talk to`, () => {
         return supertest(app)
           .get('/api/conversation/find')
           .set('authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send([])
-          .expect(200)
+          .send({currentConversationIds: []})
+          .expect(200, {error: 'no available users'})
       })
     })
 
     context(`Give there are conversations in the database`, () => {
+      beforeEach('insert conversations', async () => {
+        await helpers.seedUsers(db, testUsers)
+        await helpers.seedConvos(db, testConvos)
+        await helpers.seedMessages(db, testMessages)
+      })
 
+      it(`Should respond 200 with a single random user to start new conversation with`, () => {
+        return supertest(app)
+          .get('/api/conversation/find')
+          .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send({currentConversationIds: [2, 3]})
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.id).does.not.eql(1)
+            expect(res.body.id).does.not.eql(2)
+            expect(res.body.id).does.not.eql(3)
+            expect(res.body).to.have.property('id')
+            expect(res.body).to.have.property('display_name')
+            expect(res.body).to.have.property('bio')
+            expect(res.body).to.have.property('country')
+            expect(res.body).to.have.property('fa_icon')
+          })
+      })
     })
   })
 
@@ -99,7 +149,8 @@ describe.only('Conversation Endpoints', function () {
     beforeEach('insert conversations', async () => {
       await helpers.seedUsers(db, testUsers)
     })
-    const testConversation = helpers.makeTestConversation(testUsers[0])
+ 
+    // todo Cases to account for active conversation increment
 
     it(`creates new conversation between two users and returns conversation object`, () => {
       return supertest(app)
@@ -122,6 +173,51 @@ describe.only('Conversation Endpoints', function () {
           expect(res.body.user_2_turn).to.be.false
         })
     })
+  })
+
+  describe(`PATCH /api/conversation/:conversation_id`, () => {
+    beforeEach('insert conversations', async () => {
+      await helpers.seedUsers(db, testUsers)
+      await helpers.seedConvos(db, testConvos)
+      await helpers.seedMessages(db, testMessages)
+    })
+
+    it(`deactivates a conversation between paired users and decrements both users active conversation count`, () => {
     
+
+      return supertest(app)
+        .patch(`/api/conversation/${testConvos[1].id}`)
+        .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+        .expect(204)
+        .then(async () => {
+          return await db
+            .from('conversation')
+            .where({id: 2})
+            .select('is_active')
+        })
+        .then(([res]) => {
+          expect(res.is_active).to.be.false
+        })
+        .then(async () => { // user_1
+          return await db
+            .from('user')
+            .where({id: 1})
+            .select('active_conversations')
+        })
+        .then(([res]) => {
+          expect(res.active_conversations).to.eql(testUsers[0].active_conversations - 1)
+        })
+        .then(async () => { // user_2
+          return await db
+            .from('user')
+            .where({id: 3})
+            .select('active_conversations')
+        })
+        .then(([res]) => {
+          expect(res.active_conversations).to.eql(testUsers[2].active_conversations - 1)
+        })
+        // database queries to users 1 and 3 to make sure their counts decremented
+        // query to conversation_id 2 to make sure is_active set to false
+    })
   })
 })

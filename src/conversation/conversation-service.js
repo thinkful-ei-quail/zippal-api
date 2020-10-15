@@ -70,7 +70,43 @@ const ConversationService = {
       .then((id) => {
         return this.getById(db, id)
       })
+  }, 
+
+  incrementConversationCounts(db, user_1, user_2) {
+    return db
+      .transaction(async trx => {
+        await trx('user')
+          .where('id', user_1)
+          .increment('active_conversations', 1)
+
+        await trx('user')
+          .where('id', user_2)
+          .increment('active_conversations', 1)
+      })
+  }, 
+
+    decrementConversationCounts(db, user_1, user_2) {
+    return db
+      .transaction(async trx => {
+        await trx('user')
+          .where('id', user_1)
+          .decrement('active_conversations', 1)
+
+        await trx('user')
+          .where('id', user_2)
+          .decrement('active_conversations', 1)
+      })
+  }, 
+
+  deactivateConversation(db, conversationId) {
+    return db
+      .from('conversation')
+      .where('id', conversationId)
+      .update({
+        is_active: false
+      }, ['user_1', 'user_2'])
   }
+
 }
 
 // 1. See which active conversations are going on to see what users we have paired together

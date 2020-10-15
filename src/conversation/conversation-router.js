@@ -2,10 +2,6 @@ const express = require('express')
 const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
-const testHelpers = require('../../test/test-helpers.js')
-const { request } = require('http')
-
-
 
 const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -43,7 +39,15 @@ conversationRouter
     
       // if no users are available for conversation then return 404
 
+      await ConversationService.incrementConversationCounts(
+        req.app.get('db'), 
+        req.user.id,
+        user_2
+      )
+
       res.status(201).json(conversation)
+
+      next()
       
     } catch (error) {
       next(error)
@@ -58,41 +62,60 @@ conversationRouter
     // get available users
     .get(jsonBodyParser, async (req, res, next) => {
       const { currentConversationIds } = req.body // array of ids
-      console.log(req.body)
       try {
         const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
         const filteredUsers = availableUsers.filter((u) => {
          return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
         })
 
+        // if every user has 5 conversations already
+        if(filteredUsers.length === 0) {
+          res.status(200).json({error: 'no available users'})
+        }
+
         const randomUser = filteredUsers[Math.floor(Math.random() * filteredUsers.length)]
 
         res.status(200).json(randomUser)
+
+        next()
 
       } catch (error) {
         next(error)
       }
     })
 
-    // accept conversation and then do post
-    // or look for another person to pair with
-
+// accept conversation and then do post
+// or look for another person to pair with
 
 // single conversation
 conversationRouter
-  .all(requireAuth)
   .route('/:conversation_id')
-  .get(async (req, res, next) => {
+  .all(requireAuth)
+  .patch( async (req, res, next) => {
     try {
+      let {conversation_id} = req.params
+      conversation_id = parseInt(conversation_id)
 
-      res.send('testing')
-      next()
+      const [pairedUsers] = await ConversationService.deactivateConversation(
+        req.app.get('db'),
+        conversation_id
+      )
 
-    } catch(error) {
+      await ConversationService.decrementConversationCounts(
+        req.app.get('db'),
+        pairedUsers.user_1,
+        pairedUsers.user_2
+      )
+  
+      res.status(204).end()
+      
+    } catch (error) {
       next(error)
     }
+  
   })
   
+  // todo establish endpoint for ending a conversation
  
 
 
