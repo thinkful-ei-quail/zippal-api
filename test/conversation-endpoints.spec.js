@@ -59,4 +59,21 @@ describe.only('Conversation Endpoints', function () {
       })
     })
   })
+
+  describe('POST /api/conversation', () => {
+    beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
+
+    it('creates a new conversation, responding with 201 and the new conversation', () => {
+      const testUser = testUsers[0];
+      const newConversation = helpers.postNewConversation(testUser.id)
+      console.log(newConversation)
+ 
+
+      return supertest(app)
+        .post('/api/conversation')
+        .set('authorization', helpers.makeAuthHeader(testUser))
+        .send(newConversation)
+        .expect(201)
+    })
+  })
 })

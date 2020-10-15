@@ -22,19 +22,21 @@ const ConversationService = {
       .first()
   }, 
 
-  // beginNewConversation(db, newConversation) {
-  //   return db
-  //     .insert(newConversation)
-  //     .into('conversation')
-  //     .returning('*')
-  //     .then(([conversation]) => {
-  //       return ConversationService.getById(
-  //         db,
-  //         conversation.id,
-  //         new
-  //       )
-  //     })
-  // }
+  beginNewConversation(db, newConversation) {
+    return db
+      .insert(newConversation)
+      .into('conversation')
+      .returning('*')
+      .then(([conversation]) => {
+        return ConversationService.getById(
+          db,
+          conversation.id,
+          newConversation
+        )
+      })
+  },
+
+  
 }
 
 module.exports = ConversationService

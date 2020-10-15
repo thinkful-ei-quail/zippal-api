@@ -195,6 +195,13 @@ function getExpectedConvos(user_id, convos) {
   return convos.filter((convo) => convo.user_1 === user_id || convo.user_2 === user_id)
 }
 
+function postNewConversation(userId) {
+  return {
+    user_1: userId,
+    user_2: 4
+  }
+}
+
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
@@ -205,5 +212,6 @@ module.exports = {
   cleanTables,
   seedUsers,
   seedConvos,
-  getExpectedConvos
+  getExpectedConvos,
+  postNewConversation
 }
