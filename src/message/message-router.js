@@ -12,32 +12,32 @@ messageRouter
   // all methods will require being logged-in - will need to use requireAuth
   .all(requireAuth)
 
-  // get all messages in conversation
-  .get((req, res, next) => {
-    MessageService.getAllMessages(req.app.get("db"), req.params.conversation_id)
-      .then((messages) => {
-        res.json(MessageService.serializeMessages(messages));
-      })
-      .catch(next);
-  })
+  // get all messages in conversation - not needed, built into conversation router
+  // .get((req, res, next) => {
+  //   MessageService.getAllMessages(req.app.get("db"), req.params.conversation_id)
+  //     .then((messages) => {
+  //       res.json(MessageService.serializeMessages(messages));
+  //     })
+  //     .catch(next);
+  // })
 
   // posting new message to file upon creation of new message
   .post(jsonBodyParser, (req, res, next) => {
     const {
       conversation_id,
       sender_id,
-      sender_status,
+      // sender_status, - will use table default, not getting from client
       receiver_id,
-      receiver_status,
+      // receiver_status, - will use table default, not getting from client
       content,
     } = req.body;
 
     const newMessage = {
       conversation_id,
       sender_id,
-      sender_status,
+      // sender_status, - will use table default
       receiver_id,
-      receiver_status,
+      // receiver_status, - will use table default
       content,
     };
 
@@ -62,9 +62,18 @@ messageRouter
   .all(requireAuth)
   .all(checkMessageExists)
 
-  // open specific message
+  // open specific message - need specific id ... from params, use getbyID
   .get((req, res) => {
-      res.json(MessageService.serializeMessage(res.message))
+      MessageService.getByID(
+        req.app.get('db'),
+        req.params.message_id
+      )
+       .then(message => 
+         res
+         .status(200)
+         .json(MessageService.serializeMessage(message))
+       )
+      
   });
 
 messageRouter
