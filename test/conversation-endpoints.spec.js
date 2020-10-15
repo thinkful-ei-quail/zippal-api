@@ -3,7 +3,7 @@ const supertest = require('supertest');
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe.only('Conversation Endpoints', function () {
+describe('Conversation Endpoints', function () {
   let db
 
   const {testUsers, testConvos, testMessages } = helpers.makeTestFixtures();

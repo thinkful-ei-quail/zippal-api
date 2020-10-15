@@ -62,7 +62,6 @@ conversationRouter
     // get available users
     .get(jsonBodyParser, async (req, res, next) => {
       const { currentConversationIds } = req.body // array of ids
-      console.log(req.body)
       try {
         const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
         const filteredUsers = availableUsers.filter((u) => {
@@ -92,13 +91,11 @@ conversationRouter
 conversationRouter
   .route('/:conversation_id')
   .all(requireAuth)
-  .patch(jsonBodyParser, async (req, res, next) => {
+  .patch( async (req, res, next) => {
     try {
-
       let {conversation_id} = req.params
       conversation_id = parseInt(conversation_id)
-      const { is_active } = req.body
-     
+
       const [pairedUsers] = await ConversationService.deactivateConversation(
         req.app.get('db'),
         conversation_id
