@@ -12,14 +12,14 @@ messageRouter
   // all methods will require being logged-in - will need to use requireAuth
   .all(requireAuth)
 
-  // get all messages in conversation
-  .get((req, res, next) => {
-    MessageService.getAllMessages(req.app.get("db"), req.params.conversation_id)
-      .then((messages) => {
-        res.json(MessageService.serializeMessages(messages));
-      })
-      .catch(next);
-  })
+  // get all messages in conversation - not needed, built into conversation router
+  // .get((req, res, next) => {
+  //   MessageService.getAllMessages(req.app.get("db"), req.params.conversation_id)
+  //     .then((messages) => {
+  //       res.json(MessageService.serializeMessages(messages));
+  //     })
+  //     .catch(next);
+  // })
 
   // posting new message to file upon creation of new message
   .post(jsonBodyParser, (req, res, next) => {
