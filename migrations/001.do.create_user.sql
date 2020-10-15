@@ -3,6 +3,7 @@ CREATE TABLE "user" (
   "username" TEXT NOT NULL UNIQUE,
   "display_name" TEXT,
   "password" TEXT NOT NULL,
+  "active_conversations" INTEGER DEFAULT 0,
   "bio" TEXT,
   "country" TEXT,
   "fa_icon" TEXT DEFAULT 'user-circle' 
