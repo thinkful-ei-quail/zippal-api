@@ -78,6 +78,26 @@ describe.only('Conversation Endpoints', function () {
     })
   })
 
+<<<<<<< HEAD
+=======
+  describe(`GET /api/conversation/find`, () => {
+
+    context(`Given there are no available users to start new conversations`, () => {
+      it(`should return 200 and message no one available to talk to`, () => {
+        return supertest(app)
+          .get('/api/conversation/find')
+          .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send([])
+          .expect(200)
+      })
+    })
+
+    context(`Give there are conversations in the database`, () => {
+
+    })
+  })
+
+>>>>>>> 64d6325b2f3a52eddeff249925b1bd8e31f290ed
   describe(`POST /api/conversation`, () => {
     beforeEach('insert conversations', async () => {
       await helpers.seedUsers(db, testUsers)
