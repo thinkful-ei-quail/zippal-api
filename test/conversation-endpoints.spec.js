@@ -77,4 +77,34 @@ describe.only('Conversation Endpoints', function () {
       })
     })
   })
+
+  describe(`POST /api/conversation`, () => {
+    beforeEach('insert conversations', async () => {
+      await helpers.seedUsers(db, testUsers)
+    })
+    const testConversation = helpers.makeTestConversation(testUsers[0])
+
+    it(`creates new conversation between two users and returns conversation object`, () => {
+      return supertest(app)
+        .post('/api/conversation')
+        .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send({user_2: testUsers[3].id})
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).to.have.property('id')
+          expect(res.body).to.have.property('date_created')
+          expect(res.body).to.have.property('is_active')
+          expect(res.body).to.have.property('user_1_turn')
+          expect(res.body).to.have.property('user_2_turn')
+          expect(res.body).to.have.property('username')
+          expect(res.body).to.have.property('display_name')
+          expect(res.body).to.have.property('fa_icon')
+          expect(res.body).to.not.have.property('password')
+          expect(res.body.is_active).to.be.true
+          expect(res.body.user_1_turn).to.be.true
+          expect(res.body.user_2_turn).to.be.false
+        })
+    })
+    
+  })
 })

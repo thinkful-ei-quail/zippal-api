@@ -29,25 +29,44 @@ const ConversationService = {
       .where('conversation_id', conversation_id)
   },
 
-  getById(db, id, user_id) {
-    return ConversationService.getUsersConversations(db, user_id)
-      .where('con.id', id)
+  getById(db, id) {
+    return db
+    .from('conversation AS con')
+    .select(
+        'con.id',
+        'con.date_created',
+        'con.is_active',
+        'con.user_1_turn',
+        'con.user_2_turn',
+        'user.display_name',
+        'user.username',
+        'user.fa_icon'
+      )
+      .where('con.id', parseInt(id))
+      .join('user', 'con.user_2', '=', 'user.id')
       .first()
   }, 
 
-  // beginNewConversation(db, newConversation) {
-  //   return db
-  //     .insert(newConversation)
-  //     .into('conversation')
-  //     .returning('*')
-  //     .then(([conversation]) => {
-  //       return ConversationService.getById(
-  //         db,
-  //         conversation.id,
-  //         new
-  //       )
-  //     })
-  // }
+  getAvailableUsers(db) {
+    // return an array of user ids that are open for pairing
+  },
+
+  beginNewConversation(db, newConversation) {
+    return db
+      .insert(newConversation)
+      .into('conversation')
+      .returning('id')
+      .then((id) => {
+        return this.getById(db, id)
+      })
+  }
 }
+
+// 1. See which active conversations are going on to see what users we have paired together
+// 2. When make a request, send an array of active conversations to get the count
+// 3. Query of the user table where active conversations less than 5 - returning user ids - filter out 
+    // - have an array with only available user ids
+// 4. If user_2 already in five conversations, don't allow the pair and search for another user
+// 5. 
 
 module.exports = ConversationService
