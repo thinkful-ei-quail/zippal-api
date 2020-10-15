@@ -177,17 +177,31 @@ function seedUsers(db, users) {
 }
 
 
- function seedConvos(db, convos) {
+function seedConvos(db, convos) {
   return db.transaction(async (trx) => {   
     try {
       await trx.into('conversation').insert(convos)
       await trx.raw(`SELECT setval('conversation_id_seq', ?)`, [
-      convos[convos.length-1].id
-    ])
+        convos[convos.length-1].id
+      ])
     } catch (error) {
-        console.log(error)
+      console.log(error)
     }
     
+  })
+}
+
+function seedMessages(db, messages) {
+  return db.transaction(async trx => {
+    try {
+      await trx.into('message').insert(messages)
+      await trx.raw(`
+      SELECT setval('message_id_seq', ?)
+      `, [messages[messages.length - 1].id]
+      )
+    } catch(error) {
+      console.log(error)
+    }
   })
 }
 
@@ -195,11 +209,15 @@ function getExpectedConvos(user_id, convos) {
   return convos.filter((convo) => convo.user_1 === user_id || convo.user_2 === user_id)
 }
 
-function postNewConversation(userId) {
-  return {
-    user_1: userId,
-    user_2: 4
-  }
+function getExpectedMessages(user_id, convos, messages) {
+  const userConvos = convos.filter((convo) => convo.user_1 === user_id || convo.user_2 === user_id)
+  const messageArr = []
+  userConvos.forEach(convo => {
+    messageArr.push(messages.filter(message => 
+      message.conversation_id === convo.id
+    ))
+  })
+  return messageArr
 }
 
 module.exports = {
@@ -212,6 +230,7 @@ module.exports = {
   cleanTables,
   seedUsers,
   seedConvos,
+  seedMessages,
   getExpectedConvos,
-  postNewConversation
+  getExpectedMessages
 }

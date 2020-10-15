@@ -12,8 +12,21 @@ const ConversationService = {
         'con.user_1_turn',
         'con.user_2_turn',
       )
-      .where('con.user_1', user_id)
-      .orWhere('con.user_2', user_id)
+      .where({
+        'con.user_1': user_id,
+        'con.is_active': true
+      })
+      .orWhere({
+        'con.user_2': user_id,
+        'con.is_active': true
+      })
+  },
+
+  getConversationMessages(db, conversation_id) {
+    return db
+      .from('message')
+      .select('*')
+      .where('conversation_id', conversation_id)
   },
 
   getById(db, id, user_id) {
@@ -22,21 +35,19 @@ const ConversationService = {
       .first()
   }, 
 
-  beginNewConversation(db, newConversation) {
-    return db
-      .insert(newConversation)
-      .into('conversation')
-      .returning('*')
-      .then(([conversation]) => {
-        return ConversationService.getById(
-          db,
-          conversation.id,
-          newConversation
-        )
-      })
-  },
-
-  
+  // beginNewConversation(db, newConversation) {
+  //   return db
+  //     .insert(newConversation)
+  //     .into('conversation')
+  //     .returning('*')
+  //     .then(([conversation]) => {
+  //       return ConversationService.getById(
+  //         db,
+  //         conversation.id,
+  //         new
+  //       )
+  //     })
+  // }
 }
 
 module.exports = ConversationService
