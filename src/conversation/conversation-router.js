@@ -9,6 +9,7 @@ const testHelpers = require('../../test/test-helpers.js')
 const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
 
+// Get all conversations
 conversationRouter
   .route('/')
   .all(requireAuth)
@@ -32,7 +33,19 @@ conversationRouter
     } catch(error) {
       next(error)
     }
-  });
+  })  // Post - start a new conversation between two users
+  .post(jsonBodyParser, async (req, res, next) => {
+    try {
+      const {user_2} = req.body;
+      const newConversation = {user_1: req.user.id, user_2}
+      const conversation = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
+    
+      res.status(201).json(conversation)
+      
+    } catch (error) {
+      next(error)
+    }
+  })
 
 // single conversation
 conversationRouter
@@ -49,5 +62,7 @@ conversationRouter
     }
   })
   
+ 
+
 
 module.exports = conversationRouter;

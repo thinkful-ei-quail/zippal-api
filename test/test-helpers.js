@@ -205,6 +205,13 @@ function seedMessages(db, messages) {
   })
 }
 
+function makeTestConversation (user) {
+  return {
+    user_1: user.id,
+    user_2: 4
+  }
+}
+
 function getExpectedConvos(user_id, convos) {
   return convos.filter((convo) => convo.user_1 === user_id || convo.user_2 === user_id)
 }
@@ -231,6 +238,7 @@ module.exports = {
   seedUsers,
   seedConvos,
   seedMessages,
+  makeTestConversation,
   getExpectedConvos,
   getExpectedMessages
 }
