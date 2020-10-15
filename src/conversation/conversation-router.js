@@ -39,7 +39,15 @@ conversationRouter
     
       // if no users are available for conversation then return 404
 
+      await ConversationService.incrementConversationCounts(
+        req.app.get('db'), 
+        req.user.id,
+        user_2
+      )
+
       res.status(201).json(conversation)
+
+      next()
       
     } catch (error) {
       next(error)
@@ -61,6 +69,7 @@ conversationRouter
          return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
         })
 
+        // if every user has 5 conversations already
         if(filteredUsers.length === 0) {
           res.status(200).json({error: 'no available users'})
         }
@@ -69,30 +78,47 @@ conversationRouter
 
         res.status(200).json(randomUser)
 
+        next()
+
       } catch (error) {
         next(error)
       }
     })
 
-    // accept conversation and then do post
-    // or look for another person to pair with
-
+// accept conversation and then do post
+// or look for another person to pair with
 
 // single conversation
 conversationRouter
-  .all(requireAuth)
   .route('/:conversation_id')
-  .get(async (req, res, next) => {
+  .all(requireAuth)
+  .patch(jsonBodyParser, async (req, res, next) => {
     try {
 
-      res.send('testing')
-      next()
+      let {conversation_id} = req.params
+      conversation_id = parseInt(conversation_id)
+      const { is_active } = req.body
+     
+      const [pairedUsers] = await ConversationService.deactivateConversation(
+        req.app.get('db'),
+        conversation_id
+      )
 
-    } catch(error) {
+      await ConversationService.decrementConversationCounts(
+        req.app.get('db'),
+        pairedUsers.user_1,
+        pairedUsers.user_2
+      )
+  
+      res.status(204).end()
+      
+    } catch (error) {
       next(error)
     }
+  
   })
   
+  // todo establish endpoint for ending a conversation
  
 
 
