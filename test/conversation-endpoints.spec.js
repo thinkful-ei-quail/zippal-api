@@ -149,8 +149,15 @@ describe('Conversation Endpoints', function () {
     beforeEach('insert conversations', async () => {
       await helpers.seedUsers(db, testUsers)
     })
- 
-    // todo Cases to account for active conversation increment
+
+    it('responds 400, error message when user_2 id not provided', () => {
+      return supertest(app)
+        .post('/api/conversation')
+        .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+        .expect(400, {
+          error: 'Please provide user_2 id'
+        })
+    })
 
     it(`creates new conversation between two users and returns conversation object`, () => {
       return supertest(app)
@@ -171,6 +178,26 @@ describe('Conversation Endpoints', function () {
           expect(res.body.is_active).to.be.true
           expect(res.body.user_1_turn).to.be.true
           expect(res.body.user_2_turn).to.be.false
+        })
+        .then(async () => {
+          return await db 
+            .from('user')
+            .select('active_conversations')
+            .where('id', testUsers[0].id)
+            .first()
+        })
+        .then(res => {
+          expect(res.active_conversations).to.eql(testUsers[0].active_conversations + 1)
+        })
+        .then(async () => {
+          return await db 
+            .from('user')
+            .select('active_conversations')
+            .where('id', testUsers[3].id)
+            .first()
+        })
+        .then(res => {
+          expect(res.active_conversations).to.eql(testUsers[3].active_conversations + 1)
         })
     })
   })
