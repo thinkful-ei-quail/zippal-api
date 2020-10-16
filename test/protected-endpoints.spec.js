@@ -2,7 +2,7 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 const supertest = require('supertest')
 
-describe.only('Protected Endpoints', function() {
+describe('Protected Endpoints', function() {
   let db
 
   const { testUsers, testConvos, testMessages } = helpers.makeTestFixtures()
