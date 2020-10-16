@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
-const { reset } = require('nodemon')
+
 
 const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
