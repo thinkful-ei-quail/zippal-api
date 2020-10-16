@@ -34,6 +34,12 @@ conversationRouter
   .post(jsonBodyParser, async (req, res, next) => {
     try {
       const {user_2} = req.body;
+      
+      if(!user_2) {
+        return res.status(400).json({
+          error: 'Please provide user_2 id'
+        })
+      }
       const newConversation = {user_1: req.user.id, user_2}
       const conversation = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
     

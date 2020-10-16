@@ -31,8 +31,8 @@ const ConversationService = {
 
   getById(db, id) {
     return db
-    .from('conversation AS con')
-    .select(
+      .from('conversation AS con')
+      .select(
         'con.id',
         'con.date_created',
         'con.is_active',
@@ -85,7 +85,7 @@ const ConversationService = {
       })
   }, 
 
-    decrementConversationCounts(db, user_1, user_2) {
+  decrementConversationCounts(db, user_1, user_2) {
     return db
       .transaction(async trx => {
         await trx('user')
@@ -112,7 +112,7 @@ const ConversationService = {
 // 1. See which active conversations are going on to see what users we have paired together
 // 2. When make a request, send an array of active conversations to get the count
 // 3. Query of the user table where active conversations less than 5 - returning user ids - filter out 
-    // - have an array with only available user ids
+// - have an array with only available user ids
 // 4. If user_2 already in five conversations, don't allow the pair and search for another user
 // 5. 
 
