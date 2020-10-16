@@ -3,7 +3,7 @@ const helpers = require('./test-helpers')
 const supertest = require('supertest')
 const { expect } = require('chai')
 
-describe.only('Message Endpoints', () => {
+describe('Message Endpoints', () => {
 
   let db
 
