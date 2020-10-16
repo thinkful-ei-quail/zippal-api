@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
+const { reset } = require('nodemon')
 
 const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -62,16 +63,19 @@ conversationRouter
 
 // find a random person available
 // then start new conversation (or not)
+
 conversationRouter
-  .route('/find')
+  .route('/find/:currentConversationIds')
   .all(requireAuth)
 // get available users
   .get(jsonBodyParser, async (req, res, next) => {
-    const { currentConversationIds } = req.body // array of ids
+    const { currentConversationIds } = req.params
     try {
+      const conversationIds = currentConversationIds.split('%20')
+      console.log(currentConversationIds)
       const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
       const filteredUsers = availableUsers.filter((u) => {
-        return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
+      return (conversationIds.includes(u.id) || u.id === req.user.id) ? null : u
       })
 
       // if every user has 5 conversations already
