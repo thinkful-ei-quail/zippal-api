@@ -46,24 +46,25 @@ messageRouter
       .catch(next);
   });
 
-messageRouter
-  .route("/:message_id")
-  .all(requireAuth)
-  .all(checkMessageExists)
+// THIS ROUTE IS LIKELY REDUNDANT. COMMENTED OUT FOR NOW //
+// messageRouter
+//   .route("/:message_id")
+//   .all(requireAuth)
+//   .all(checkMessageExists)
 
-  // open specific message - need specific id ... from params, use getbyID
-  .get((req, res) => {
-    MessageService.getByID(
-      req.app.get('db'),
-      req.params.message_id
-    )
-      .then(message => 
-        res
-          .status(200)
-          .json(MessageService.serializeMessage(message))
-      )
+//   // open specific message - need specific id ... from params, use getbyID
+//   .get((req, res) => {
+//     MessageService.getByID(
+//       req.app.get('db'),
+//       req.params.message_id
+//     )
+//       .then(message => 
+//         res
+//           .status(200)
+//           .json(MessageService.serializeMessage(message))
+//       )
       
-  });
+//   });
 
 messageRouter
   .route("/:message_id/save")
@@ -77,7 +78,7 @@ messageRouter
     const numberOfValues = Object.values(updatedMessageField).filter(Boolean).length
     if (numberOfValues === 0)
       return res.status(400).json({
-        error: { message: `Request body must contain content`}
+        error: `Request body must contain content`
       })
 
     MessageService.updateMessage(
@@ -114,6 +115,13 @@ messageRouter
       req.params.message_id,
       updatedMessageFields
     )
+      .then(async message => {
+        await MessageService.setConversationTurns(
+          req.app.get('db'),
+          message.conversation_id
+        )
+        return message
+      })
       .then(message => {
         res
           .status(200)
