@@ -98,9 +98,9 @@ function makeMessagesArray() {
     {
       id: 3,
       conversation_id: 2,
-      sender_id: 1,
+      sender_id: 3,
       sender_status: 'Sent',
-      receiver_id: 3,
+      receiver_id: 1,
       receiver_status: 'Received',
       content: 'Hello',
       is_read: false
