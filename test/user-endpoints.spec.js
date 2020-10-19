@@ -183,4 +183,64 @@ describe('User Endpoints', function() {
       })
     })
   })
+  describe('PATCH /api/user', () => {
+    beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
+
+    it('responds 400, required error when missing request body', () => {
+      return supertest(app)
+        .patch('/api/user')
+        .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+        .expect(400, {
+          error: 'Missing request body'
+        })
+    })
+
+    const invalidFields = ['username', 'display_name', 'password', 'active_conversations']
+
+    invalidFields.forEach(field => {
+      it(`responds 400, invalid error when '${field}' is given`, () => {
+        const invalidRequest = {}
+        invalidRequest[field] = 'invalid data'
+
+        return supertest(app)
+          .patch('/api/user')
+          .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(invalidRequest)
+          .expect(400, {
+            error: `Cannot update '${field}'`
+          })
+      })
+    })
+
+    it('responds 200, updated fields given valid request fields', () => {
+      const validRequest = {
+        bio: 'I like programming',
+        location: 'SLC',
+        fa_icon: 'fa-camera'
+      }
+
+      return supertest(app)
+        .patch('/api/user')
+        .set('authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send(validRequest)
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.have.property('bio')
+          expect(res.body).to.have.property('location')
+          expect(res.body).to.have.property('fa_icon')
+        })
+        .then(() => {
+          db
+            .from('user')
+            .select('*')
+            .whereRaw('id = ?', [testUsers[0].id])
+            .first()
+            .then(row => {
+              expect(row.bio).to.eql('I like programming')
+              expect(row.location).to.eql('SLC')
+              expect(row.fa_icon).to.eql('fa-camera')
+            })
+        })
+    })
+  })
 })

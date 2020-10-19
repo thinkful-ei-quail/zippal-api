@@ -63,7 +63,7 @@ const ConversationService = {
         'display_name',
         'username',
         'bio',
-        'country',
+        'location',
         'fa_icon'
       )
       .where('active_conversations', '<', 5)

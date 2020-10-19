@@ -5,6 +5,6 @@ CREATE TABLE "user" (
   "password" TEXT NOT NULL,
   "active_conversations" INTEGER DEFAULT 0,
   "bio" TEXT,
-  "country" TEXT,
+  "location" TEXT,
   "fa_icon" TEXT DEFAULT 'user-circle' 
 );

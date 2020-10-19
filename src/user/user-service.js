@@ -17,6 +17,11 @@ const UserService = {
       .returning('*')
       .then(([user]) => user)
   },
+  updateUser(db, userId, updateFields) {
+    return db('user')
+      .whereRaw('id = ?', [userId])
+      .update(updateFields,['display_name', 'username', 'bio', 'location', 'fa_icon'])
+  },
   validatePassword(password) {
     if(password.length < 8) {
       return 'Password must be longer than 8 characters'
