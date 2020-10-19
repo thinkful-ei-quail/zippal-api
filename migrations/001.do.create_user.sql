@@ -1,7 +1,7 @@
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
   "username" TEXT NOT NULL UNIQUE,
-  "display_name" TEXT,
+  "display_name" TEXT NOT NULL,
   "password" TEXT NOT NULL,
   "active_conversations" INTEGER DEFAULT 0,
   "bio" TEXT,
