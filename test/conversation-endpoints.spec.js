@@ -139,7 +139,7 @@ describe('Conversation Endpoints', function () {
             expect(res.body).to.have.property('id')
             expect(res.body).to.have.property('display_name')
             expect(res.body).to.have.property('bio')
-            expect(res.body).to.have.property('country')
+            expect(res.body).to.have.property('location')
             expect(res.body).to.have.property('fa_icon')
           })
       })
