@@ -13,9 +13,30 @@ conversationRouter
   .all(requireAuth)
   .get(async (req, res, next) => {
     try {
-      const conversations = await ConversationService.getUsersConversations(
+      let conversations = await ConversationService.getUsersConversations(
         req.app.get('db'),
         req.user.id
+      )
+
+      conversations = await Promise.all(conversations.map(async convo => {
+        const { display_name } = await ConversationService.getDisplayName(
+          req.app.get('db'),
+          convo.user_2
+        )
+
+        if(display_name !== req.user.display_name) {
+          return { ...convo, pal_name: display_name }
+          
+        } else {
+
+          const { display_name } = await ConversationService.getDisplayName(
+            req.app.get('db'),
+            convo.user_1
+          )
+
+          return { ...convo, pal_name: display_name }
+        }
+      })
       )
 
       const messages = await Promise.all(conversations.map(convo => 
@@ -70,13 +91,21 @@ conversationRouter
 // get available users
   .get(jsonBodyParser, async (req, res, next) => {
     const { currentConversationIds } = req.params
+
     try {
-      const conversationIds = currentConversationIds.split('%20')
-      console.log(currentConversationIds)
-      const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
-      const filteredUsers = availableUsers.filter((u) => {
-      return (conversationIds.includes(u.id) || u.id === req.user.id) ? null : u
-      })
+      let filteredUsers
+      if(currentConversationIds === 'empty') {
+        const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
+        filteredUsers = availableUsers.filter((u) => {
+          return (u.id === req.user.id) ? null : u
+        }) 
+      } else {
+        const conversationIds = currentConversationIds.replace('%20', ' ').split(' ').map(n => parseInt(n))
+        const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
+        filteredUsers = availableUsers.filter((u) => {
+          return (conversationIds.includes(u.id)) ? null : u
+        })
+      }
 
       // if every user has 5 conversations already
       if(filteredUsers.length === 0) {

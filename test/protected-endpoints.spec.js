@@ -51,11 +51,6 @@ describe('Protected Endpoints', function() {
       method: supertest(app).post
     },
     {
-      name: 'GET /api/message/:message_id',
-      path: '/api/message/:message_id',
-      method: supertest(app).get
-    },
-    {
       name: 'PATCH /api/message/:message_id/save',
       path: '/api/message/:message_id/save',
       method: supertest(app).patch

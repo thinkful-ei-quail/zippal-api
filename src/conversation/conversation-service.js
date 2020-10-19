@@ -22,6 +22,13 @@ const ConversationService = {
       })
   },
 
+  getDisplayName(db, userId) {
+    return db('user')
+      .select('display_name')
+      .whereRaw('id = ?', [userId])
+      .first()
+  },
+
   getConversationMessages(db, conversation_id) {
     return db
       .from('message')
@@ -56,7 +63,7 @@ const ConversationService = {
         'display_name',
         'username',
         'bio',
-        'country',
+        'location',
         'fa_icon'
       )
       .where('active_conversations', '<', 5)
