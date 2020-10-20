@@ -13,21 +13,18 @@ messageRouter
   // posting new message to file upon creation of new message
   .post(jsonBodyParser, (req, res, next) => {
     const {
-      conversation_id,
-      sender_id,
-      // sender_status, - will use table default, not getting from client
-      receiver_id,
-      // receiver_status, - will use table default, not getting from client
-      content,
+      id,
+      user_1,
+      user_2,
     } = req.body;
 
     const newMessage = {
-      conversation_id,
-      sender_id,
+      conversation_id: id,
+      sender_id: user_1,
       // sender_status, - will use table default
-      receiver_id,
+      receiver_id: user_2,
       // receiver_status, - will use table default
-      content,
+      content: 'Message in Progress ...',
     };
 
     for (const [key, value] of Object.entries(newMessage))
