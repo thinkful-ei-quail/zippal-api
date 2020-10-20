@@ -14,17 +14,16 @@ messageRouter
   .post(jsonBodyParser, (req, res, next) => {
     const {
       id,
-      user_1,
       user_2,
     } = req.body;
 
     const newMessage = {
       conversation_id: id,
-      sender_id: user_1,
+      sender_id: req.user.id,
       // sender_status, - will use table default
       receiver_id: user_2,
       // receiver_status, - will use table default
-      content: 'Message in Progress ...',
+      content: 'Message in Progress...',
     };
 
     for (const [key, value] of Object.entries(newMessage))
@@ -101,7 +100,6 @@ messageRouter
     const {content, sender_status, receiver_status, date_sent} = req.body
     const updatedMessageFields = {content, sender_status, receiver_status, date_sent}
     // sender_status --> 'Sent' || receiver_status --> 'Received' 
-
     for(const [key, value] of Object.entries(updatedMessageFields))
       if (value == null)
         return res.status(400).json({
