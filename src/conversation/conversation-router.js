@@ -19,22 +19,22 @@ conversationRouter
       )
 
       conversations = await Promise.all(conversations.map(async convo => {
-        const { display_name } = await ConversationService.getDisplayName(
+        const { display_name, fa_icon } = await ConversationService.getDisplayNameAndIcon(
           req.app.get('db'),
           convo.user_2
         )
 
         if(display_name !== req.user.display_name) {
-          return { ...convo, pal_name: display_name }
+          return { ...convo, pal_name: display_name, fa_icon }
           
         } else {
 
-          const { display_name } = await ConversationService.getDisplayName(
+          const { display_name } = await ConversationService.getDisplayNameAndIcon(
             req.app.get('db'),
             convo.user_1
           )
 
-          return { ...convo, pal_name: display_name }
+          return { ...convo, pal_name: display_name, fa_icon }
         }
       })
       )

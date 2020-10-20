@@ -22,9 +22,9 @@ const ConversationService = {
       })
   },
 
-  getDisplayName(db, userId) {
+  getDisplayNameAndIcon(db, userId) {
     return db('user')
-      .select('display_name')
+      .select('display_name', 'fa_icon')
       .whereRaw('id = ?', [userId])
       .first()
   },
