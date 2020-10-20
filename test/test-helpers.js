@@ -17,7 +17,7 @@ function makeUsersArray() {
       username: 'test_user_1',
       display_name: 'Testy',
       password: 'Passw0rd!',
-      active_conversations: 2
+      active_conversations: 2,
     },
     {
       id: 2,

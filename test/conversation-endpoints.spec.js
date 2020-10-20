@@ -57,6 +57,8 @@ describe('Conversation Endpoints', function () {
             expect(res.body.conversations[0]).to.have.property('pal_name')
             expect(res.body.conversations[0].pal_name).to.eql('Test_boi')
             expect(res.body.conversations[1].pal_name).to.eql('Test_gurl')
+            expect(res.body.conversations[0]).to.have.property('fa_icon')
+            expect(res.body.conversations[0].fa_icon).to.eql('user-circle')
             expect(res.body.conversations[0].is_active).to.be.true
           })
 
