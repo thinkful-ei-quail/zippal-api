@@ -46,7 +46,6 @@ const ConversationService = {
         'con.user_1_turn',
         'con.user_2_turn',
         'user.display_name',
-        'user.username',
         'user.fa_icon'
       )
       .where('con.id', parseInt(id))
@@ -73,10 +72,10 @@ const ConversationService = {
     return db
       .insert(newConversation)
       .into('conversation')
-      .returning('id')
-      .then((id) => {
-        return this.getById(db, id)
-      })
+      .returning('*')
+      // .then((id) => {
+      //   return this.getById(db, id)
+      // })
   }, 
 
   incrementConversationCounts(db, user_1, user_2) {
