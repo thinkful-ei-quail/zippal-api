@@ -128,7 +128,7 @@ conversationRouter
 
 // single conversation
 conversationRouter
-  .route('/:conversation_id')
+  .route('/:conversation_id/deactivate')
   .all(requireAuth)
   .patch( async (req, res, next) => {
     try {
@@ -146,7 +146,7 @@ conversationRouter
         pairedUsers.user_2
       )
   
-      res.status(204).end()
+      res.status(200).json({})
       
     } catch (error) {
       next(error)
