@@ -63,8 +63,9 @@ conversationRouter
         })
       }
       const newConversation = {user_1: req.user.id, user_2}
-      const conversation = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
-    
+      const [ conversation ] = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
+      const convoDetails = await ConversationService.getDisplayNameAndIcon(req.app.get('db'), user_2)
+      const fullResponse = {...conversation, ...convoDetails, user_1: req.user.id, user_2}
       // if no users are available for conversation then return 404
 
       await ConversationService.incrementConversationCounts(
@@ -73,7 +74,7 @@ conversationRouter
         user_2
       )
 
-      res.status(201).json(conversation)
+      res.status(201).json(fullResponse)
 
       next()
       
