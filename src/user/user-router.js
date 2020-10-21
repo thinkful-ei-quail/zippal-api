@@ -57,13 +57,17 @@ userRouter
     }
   })
   .patch(requireAuth, jsonBodyParser, async (req, res, next) => {
-    for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
-      if(req.body[field]) {
-        return res.status(400).json({
-          error: `Cannot update '${field}'`
-        })
-      }
-    }
+    console.log('@@@@@', req.body)
+    
+    // for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
+    //   if(req.body[field]) {
+    //     return res.status(400).json({
+    //       error: `Cannot update '${field}'`
+    //     })
+    //   }
+    // }
+
+   
 
     if(!req.body.bio && !req.body.location && !req.body.fa_icon) {
       return res.status(400).json({
