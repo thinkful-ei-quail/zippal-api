@@ -25,13 +25,13 @@ VALUES
 
 INSERT INTO "message" ("id", "conversation_id", "sender_id", "sender_status", "receiver_id", "receiver_status", "content", "date_sent", "is_read")
 VALUES
-  (1, 2, 1, 'Pending', 3, 'Awaiting Message', 'This is a draft of a partially written message', null, false),
-  (2, 3, 1, 'Awaiting Reply', 4, 'Read', 'This is a complete message that has been sent but not viewed yet', '2020-10-19T17:52:45.039Z', true),
-  (3, 4, 1, 'Awaiting Reply', 5, 'Read', 'Hello Kasie! (1st Message)', '2020-10-13T17:52:45.039Z', true),
-  (4, 4, 5, 'Awaiting Reply', 1, 'Read', 'Hello Mark, how are you? (2nd Message)', '2020-10-14T17:52:45.039Z', true),
-  (5, 4, 1, 'Pending', 5, 'Awaiting Message', 'Draft: Write some elegant words here... (3rd Message)', '2020-10-16T17:52:45.039Z', false),
-  (6, 1, 1, 'Awaiting Reply', 2, 'Read', 'Hello Tom, we should start a band with Travis', '2020-10-19T17:52:45.039Z', true),
-  (7, 1, 2, 'Sent', 1, 'Received', 'Sounds good, we can call it Blink-182', '2020-10-20T17:52:45.039Z', false);
+  (1, 1, 1, 'Awaiting Reply', 2, 'Read', 'Hello Tom, we should start a band with Travis', '2020-10-19T17:52:45.039Z', true),
+  (2, 1, 2, 'Sent', 1, 'Received', 'Sounds good, we can call it Blink-182', '2020-10-20T17:52:45.039Z', false),
+  (3, 2, 1, 'Pending', 3, 'Awaiting Message', 'This is a draft of a partially written message', null, false),
+  (4, 3, 1, 'Awaiting Reply', 4, 'Read', 'This is a complete message that has been sent but not viewed yet', '2020-10-19T17:52:45.039Z', true),
+  (5, 4, 1, 'Awaiting Reply', 5, 'Read', 'Hello Kasie! (1st Message)', '2020-10-13T17:52:45.039Z', true),
+  (6, 4, 5, 'Awaiting Reply', 1, 'Read', 'Hello Mark, how are you? (2nd Message)', '2020-10-14T17:52:45.039Z', true),
+  (7, 4, 1, 'Pending', 5, 'Awaiting Message', 'Draft: Write some elegant words here... (3rd Message)', null, false);
 
 SELECT setval('user_id_seq', (SELECT MAX(id) from "user"));
 SELECT setval('conversation_id_seq', (SELECT MAX(id) from "conversation"));
