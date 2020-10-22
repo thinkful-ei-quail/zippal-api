@@ -22,6 +22,20 @@ const UserService = {
       .whereRaw('id = ?', [userId])
       .update(updateFields,['display_name', 'username', 'bio', 'location', 'fa_icon'])
   },
+  getUserProfile(db, id) {
+    return db
+      .from('user')
+      .select(
+        'display_name',
+        'bio',
+        'location',
+        'id',
+        'username',
+        'fa_icon'
+      )
+      .where({id})
+      .first() 
+  },
   validatePassword(password) {
     if(password.length < 8) {
       return 'Password must be longer than 8 characters'
@@ -44,7 +58,11 @@ const UserService = {
     return {
       id: user.id,
       display_name: user.display_name,
-      username: user.username
+      username: user.username,
+      location: user.location,
+      bio: user.bio,
+      active_conversations: user.active_conversations,
+      fa_icon: user.fa_icon
     }
   },
 }

@@ -57,15 +57,18 @@ userRouter
     }
   })
   .patch(requireAuth, jsonBodyParser, async (req, res, next) => {
-    console.log('@@@@@', req.body)
+  
+    const {bio, location} = req.body
+
+    const updatedFields = {bio, location}
     
-    // for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
-    //   if(req.body[field]) {
-    //     return res.status(400).json({
-    //       error: `Cannot update '${field}'`
-    //     })
-    //   }
-    // }
+    for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
+      if(req.body[field]) {
+        return res.status(400).json({
+          error: `Cannot update '${field}'`
+        })
+      }
+    }
 
    
 
@@ -75,13 +78,35 @@ userRouter
       })
     }
 
-    const [ userFields ] = await UserService.updateUser(
+
+    UserService.updateUser(
       req.app.get('db'),
       req.user.id,
-      req.body
-    )
-
-    res.status(200).json(userFields)
+      updatedFields
+    ).then((user) => {
+      res
+        .status(201)
+        .json(UserService.serializeUser(user))
+    })
+    .catch(next)
+    
   })
+
+userRouter
+ .route('/profile')
+ .get(requireAuth, async (req,res,next) => {
+    try {
+      const userInfo = await UserService.getUserProfile(
+        req.app.get('db'),
+        req.user.id
+      )
+        res
+         .status(200)
+         .json(userInfo)
+    }catch(error) {
+      next(error)
+    }
+ })
+  
 
 module.exports = userRouter
