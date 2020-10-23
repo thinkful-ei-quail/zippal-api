@@ -73,9 +73,6 @@ const ConversationService = {
       .insert(newConversation)
       .into('conversation')
       .returning('*')
-      // .then((id) => {
-      //   return this.getById(db, id)
-      // })
   }, 
 
   incrementConversationCounts(db, user_1, user_2) {

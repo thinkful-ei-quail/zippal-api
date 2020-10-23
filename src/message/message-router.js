@@ -82,7 +82,6 @@ messageRouter
       req.params.message_id,
       updatedMessageField
     )
-
       .then(message => {
         res
           .status(200)

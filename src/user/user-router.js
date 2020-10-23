@@ -57,31 +57,33 @@ userRouter
     }
   })
   .patch(requireAuth, jsonBodyParser, async (req, res, next) => {
-    console.log('@@@@@', req.body)
+    try {
+      for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
+        if(req.body[field]) {
+          return res.status(400).json({
+            error: `Cannot update '${field}'`
+          })
+        }
+      }
+
     
-    // for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
-    //   if(req.body[field]) {
-    //     return res.status(400).json({
-    //       error: `Cannot update '${field}'`
-    //     })
-    //   }
-    // }
 
-   
+      if(!req.body.bio && !req.body.location && !req.body.fa_icon) {
+        return res.status(400).json({
+          error: 'Missing request body'
+        })
+      }
 
-    if(!req.body.bio && !req.body.location && !req.body.fa_icon) {
-      return res.status(400).json({
-        error: 'Missing request body'
-      })
+      const [ userFields ] = await UserService.updateUser(
+        req.app.get('db'),
+        req.user.id,
+        req.body
+      )
+
+      res.status(200).json(userFields)
+    } catch(error) {
+      next(error)
     }
-
-    const [ userFields ] = await UserService.updateUser(
-      req.app.get('db'),
-      req.user.id,
-      req.body
-    )
-
-    res.status(200).json(userFields)
   })
 
 module.exports = userRouter
