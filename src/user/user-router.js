@@ -8,6 +8,20 @@ const jsonBodyParser = express.json()
 
 userRouter
   .route('/')
+  .get(requireAuth, async (req, res, next) => {
+    try {
+      let user = await UserService.getCurrentUserProfile(
+        req.app.get('db'),
+        req.user.id
+      )
+
+      console.log(req.user.id)
+
+      res.json(user)
+    } catch (error) {
+      next(error)
+    }
+  })
   .post(jsonBodyParser, async (req, res, next) => {
     const { password, username, display_name } = req.body
 
@@ -56,12 +70,10 @@ userRouter
       next(error)
     }
   })
-  .patch(requireAuth, jsonBodyParser, async (req, res, next) => {
-  
-    const {bio, location, fa_icon} = req.body
 
+  .patch(requireAuth, jsonBodyParser, async (req, res, next) => {
+    const {bio, location, fa_icon} = req.body
     const updatedFields = {bio, location, fa_icon}
-    
     for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
       if(req.body[field]) {
         return res.status(400).json({
@@ -69,8 +81,6 @@ userRouter
         })
       }
     }
-
-   
 
     if(!req.body.bio && !req.body.location && !req.body.fa_icon) {
       return res.status(400).json({
