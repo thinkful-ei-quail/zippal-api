@@ -58,9 +58,9 @@ userRouter
   })
   .patch(requireAuth, jsonBodyParser, async (req, res, next) => {
   
-    const {bio, location} = req.body
+    const {bio, location, fa_icon} = req.body
 
-    const updatedFields = {bio, location}
+    const updatedFields = {bio, location, fa_icon}
     
     for(const field of ['username', 'password', 'display_name', 'active_conversations']) {
       if(req.body[field]) {
