@@ -51,7 +51,7 @@ const MessageService = {
       sender_status: message.sender_status,
       receiver_id: message.receiver_id,
       receiver_status: message.receiver_status,
-      content: message.content || 'Message in progress...',
+      content: xss(message.content) || 'Message in progress...',
       date_sent: message.date_sent || null,
       is_read: message.is_read,
     }
