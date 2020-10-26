@@ -43,19 +43,19 @@ const MessageService = {
             )
     },
 
-    serializeMessage(message) {
-        return {
-            id: message.id,
-            conversation_id: message.conversation_id,
-            sender_id: message.sender_id,
-            sender_status: message.sender_status,
-            receiver_id: message.receiver_id,
-            receiver_status: message.receiver_status,
-            content: message.content || 'Message in progress ...',
-            date_sent: message.date_sent || null,
-            is_read: message.is_read,
-        }
-    },
+  serializeMessage(message) {
+    return {
+      id: message.id,
+      conversation_id: message.conversation_id,
+      sender_id: message.sender_id,
+      sender_status: message.sender_status,
+      receiver_id: message.receiver_id,
+      receiver_status: message.receiver_status,
+      content: xss(message.content || 'Message in progress...'),
+      date_sent: message.date_sent || null,
+      is_read: message.is_read,
+    }
+  },
 
     serializeMessages(messages) {
         return messages.map(this.serializeMessage)
