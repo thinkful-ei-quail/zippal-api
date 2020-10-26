@@ -37,7 +37,7 @@ SELECT setval('user_id_seq', (SELECT MAX(id) from "user"));
 SELECT setval('conversation_id_seq', (SELECT MAX(id) from "conversation"));
 SELECT setval('message_id_seq', (SELECT MAX(id) from "message"));
 
-  COMMIT;
+COMMIT;
 
 
 
