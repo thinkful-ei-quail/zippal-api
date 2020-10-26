@@ -146,7 +146,7 @@ conversationRouter
         pairedUsers.user_2
       )
   
-      res.status(200).json({})
+      res.status(204).end()
       
     } catch (error) {
       next(error)
