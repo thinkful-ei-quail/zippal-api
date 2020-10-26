@@ -54,6 +54,11 @@ describe('Conversation Endpoints', function () {
             expect(res.body.conversations[0]).to.have.property('is_active')
             expect(res.body.conversations[0]).to.have.property('user_1_turn')
             expect(res.body.conversations[0]).to.have.property('user_2_turn')
+            expect(res.body.conversations[0]).to.have.property('pal_name')
+            expect(res.body.conversations[0].pal_name).to.eql('Test_boi')
+            expect(res.body.conversations[1].pal_name).to.eql('Test_gurl')
+            expect(res.body.conversations[0]).to.have.property('fa_icon')
+            expect(res.body.conversations[0].fa_icon).to.eql('user-circle')
             expect(res.body.conversations[0].is_active).to.be.true
           })
 
@@ -78,7 +83,7 @@ describe('Conversation Endpoints', function () {
     })
   })
 
-  describe(`GET /api/conversation/find`, () => {
+  describe(`GET /api/conversation/find/:currentConversationIds`, () => {
 
     context(`Given there are no available users to start new conversations`, () => {
       const invalidUsers = [{
@@ -111,9 +116,8 @@ describe('Conversation Endpoints', function () {
 
       it(`should return 200 and message no one available to talk to`, () => {
         return supertest(app)
-          .get('/api/conversation/find')
+          .get('/api/conversation/find/empty')
           .set('authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send({currentConversationIds: []})
           .expect(200, {error: 'no available users'})
       })
     })
@@ -127,9 +131,8 @@ describe('Conversation Endpoints', function () {
 
       it(`Should respond 200 with a single random user to start new conversation with`, () => {
         return supertest(app)
-          .get('/api/conversation/find')
+          .get(`/api/conversation/find/${testUsers[0].id}%202%203`)
           .set('authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send({currentConversationIds: [2, 3]})
           .expect(200)
           .expect((res) => {
             expect(res.body.id).does.not.eql(1)
@@ -138,7 +141,7 @@ describe('Conversation Endpoints', function () {
             expect(res.body).to.have.property('id')
             expect(res.body).to.have.property('display_name')
             expect(res.body).to.have.property('bio')
-            expect(res.body).to.have.property('country')
+            expect(res.body).to.have.property('location')
             expect(res.body).to.have.property('fa_icon')
           })
       })
@@ -171,7 +174,6 @@ describe('Conversation Endpoints', function () {
           expect(res.body).to.have.property('is_active')
           expect(res.body).to.have.property('user_1_turn')
           expect(res.body).to.have.property('user_2_turn')
-          expect(res.body).to.have.property('username')
           expect(res.body).to.have.property('display_name')
           expect(res.body).to.have.property('fa_icon')
           expect(res.body).to.not.have.property('password')
@@ -202,7 +204,7 @@ describe('Conversation Endpoints', function () {
     })
   })
 
-  describe(`PATCH /api/conversation/:conversation_id`, () => {
+  describe(`PATCH /api/conversation/:conversation_id/deactivate`, () => {
     beforeEach('insert conversations', async () => {
       await helpers.seedUsers(db, testUsers)
       await helpers.seedConvos(db, testConvos)
@@ -213,7 +215,7 @@ describe('Conversation Endpoints', function () {
     
 
       return supertest(app)
-        .patch(`/api/conversation/${testConvos[1].id}`)
+        .patch(`/api/conversation/${testConvos[1].id}/deactivate`)
         .set('authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(204)
         .then(async () => {

@@ -17,7 +17,7 @@ function makeUsersArray() {
       username: 'test_user_1',
       display_name: 'Testy',
       password: 'Passw0rd!',
-      active_conversations: 2
+      active_conversations: 2,
     },
     {
       id: 2,
@@ -59,6 +59,8 @@ function makeConvoArray() {
       id: 3,
       user_1: 4,
       user_2: 2,
+      user_1_turn: false,
+      user_2_turn: true
     },
     {
       id: 4,
@@ -98,9 +100,9 @@ function makeMessagesArray() {
     {
       id: 3,
       conversation_id: 2,
-      sender_id: 1,
+      sender_id: 3,
       sender_status: 'Sent',
-      receiver_id: 3,
+      receiver_id: 1,
       receiver_status: 'Received',
       content: 'Hello',
       is_read: false

@@ -1,7 +1,7 @@
 const express = require('express')
-const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
+
 
 const conversationRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -12,9 +12,30 @@ conversationRouter
   .all(requireAuth)
   .get(async (req, res, next) => {
     try {
-      const conversations = await ConversationService.getUsersConversations(
+      let conversations = await ConversationService.getUsersConversations(
         req.app.get('db'),
         req.user.id
+      )
+
+      conversations = await Promise.all(conversations.map(async convo => {
+        const { display_name, fa_icon } = await ConversationService.getDisplayNameAndIcon(
+          req.app.get('db'),
+          convo.user_2
+        )
+
+        if(display_name !== req.user.display_name) {
+          return { ...convo, pal_name: display_name, fa_icon }
+          
+        } else {
+
+          const { display_name } = await ConversationService.getDisplayNameAndIcon(
+            req.app.get('db'),
+            convo.user_1
+          )
+
+          return { ...convo, pal_name: display_name, fa_icon }
+        }
+      })
       )
 
       const messages = await Promise.all(conversations.map(convo => 
@@ -30,7 +51,8 @@ conversationRouter
     } catch(error) {
       next(error)
     }
-  })  // Post - start a new conversation between two users
+  }) 
+  // Post - start a new conversation between two users
   .post(jsonBodyParser, async (req, res, next) => {
     try {
       const {user_2} = req.body;
@@ -41,9 +63,9 @@ conversationRouter
         })
       }
       const newConversation = {user_1: req.user.id, user_2}
-      const conversation = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
-    
-      // if no users are available for conversation then return 404
+      const [ conversation ] = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
+      const convoDetails = await ConversationService.getDisplayNameAndIcon(req.app.get('db'), user_2)
+      const fullResponse = {...conversation, ...convoDetails, user_1: req.user.id, user_2}
 
       await ConversationService.incrementConversationCounts(
         req.app.get('db'), 
@@ -51,7 +73,7 @@ conversationRouter
         user_2
       )
 
-      res.status(201).json(conversation)
+      res.status(201).json(fullResponse)
 
       next()
       
@@ -62,17 +84,28 @@ conversationRouter
 
 // find a random person available
 // then start new conversation (or not)
+
 conversationRouter
-  .route('/find')
+  .route('/find/:currentConversationIds')
   .all(requireAuth)
 // get available users
   .get(jsonBodyParser, async (req, res, next) => {
-    const { currentConversationIds } = req.body // array of ids
+    const { currentConversationIds } = req.params
+
     try {
-      const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
-      const filteredUsers = availableUsers.filter((u) => {
-        return (currentConversationIds.includes(u.id) || u.id === req.user.id) ? null : u
-      })
+      let filteredUsers
+      if(currentConversationIds === 'empty') {
+        const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
+        filteredUsers = availableUsers.filter((u) => {
+          return (u.id === req.user.id) ? null : u
+        }) 
+      } else {
+        const conversationIds = currentConversationIds.replace('%20', ' ').split(' ').map(n => parseInt(n))
+        const availableUsers = await ConversationService.getAvailableUsers(req.app.get('db'))
+        filteredUsers = availableUsers.filter((u) => {
+          return (conversationIds.includes(u.id)) ? null : u
+        })
+      }
 
       // if every user has 5 conversations already
       if(filteredUsers.length === 0) {
@@ -95,7 +128,7 @@ conversationRouter
 
 // single conversation
 conversationRouter
-  .route('/:conversation_id')
+  .route('/:conversation_id/deactivate')
   .all(requireAuth)
   .patch( async (req, res, next) => {
     try {
@@ -120,9 +153,5 @@ conversationRouter
     }
   
   })
-  
-// todo establish endpoint for ending a conversation
- 
-
 
 module.exports = conversationRouter;

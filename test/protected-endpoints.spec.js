@@ -36,24 +36,19 @@ describe('Protected Endpoints', function() {
       method: supertest(app).post
     },
     {
-      name: 'GET /api/conversation/find',
-      path: '/api/conversation/find',
+      name: 'GET /api/conversation/find/:currentConversationIds',
+      path: '/api/conversation/find/:currentConversationIds',
       method: supertest(app).get
     },
     {
-      name: 'PATCH /api/conversation/:conversation_id',
-      path: '/api/conversation/:conversation_id',
+      name: 'PATCH /api/conversation/:conversation_id/deactivate',
+      path: '/api/conversation/:conversation_id/deactivate',
       method: supertest(app).patch
     },
     {
       name: 'POST /api/message',
       path: '/api/message',
       method: supertest(app).post
-    },
-    {
-      name: 'GET /api/message/:message_id',
-      path: '/api/message/:message_id',
-      method: supertest(app).get
     },
     {
       name: 'PATCH /api/message/:message_id/save',

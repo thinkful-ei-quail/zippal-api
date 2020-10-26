@@ -5,6 +5,19 @@ const xss = require('xss')
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
 const UserService = {
+  getCurrentUserProfile(db, userId) {
+    return db
+      .from('user')
+      .select(
+        'username',
+        'display_name',
+        'active_conversations',
+        'bio',
+        'location',
+        'fa_icon'
+      )
+      .where({ id: userId })
+  },
   hasUserWithUserName(db, username) {
     return db('user')
       .where({ username })
@@ -17,6 +30,25 @@ const UserService = {
       .into('user')
       .returning('*')
       .then(([user]) => user)
+  },
+  updateUser(db, userId, updateFields) {
+    return db('user')
+      .whereRaw('id = ?', [userId])
+      .update(updateFields,['*'])
+  },
+  getUserProfile(db, id) {
+    return db
+      .from('user')
+      .select(
+        'display_name',
+        'bio',
+        'location',
+        'id',
+        'username',
+        'fa_icon'
+      )
+      .where({id})
+      .first() 
   },
   validatePassword(password) {
     if(password.length < 8) {

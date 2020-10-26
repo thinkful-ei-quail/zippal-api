@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const MessageService = require("./message-service");
 const { requireAuth } = require("../middleware/jwt-auth");
+const ConversationService = require("../conversation/conversation-service");
 
 const messageRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -13,28 +14,26 @@ messageRouter
   // posting new message to file upon creation of new message
   .post(jsonBodyParser, (req, res, next) => {
     const {
-      conversation_id,
-      sender_id,
-      // sender_status, - will use table default, not getting from client
-      receiver_id,
-      // receiver_status, - will use table default, not getting from client
-      content,
+      id,
+      user_2,
     } = req.body;
 
-    const newMessage = {
-      conversation_id,
-      sender_id,
-      // sender_status, - will use table default
-      receiver_id,
-      // receiver_status, - will use table default
-      content,
-    };
+    const requiredFields = { id, user_2 }
 
-    for (const [key, value] of Object.entries(newMessage))
+    for (const [key, value] of Object.entries(requiredFields))
       if (value == null)
         return res.status(400).json({
           error: `Missing '${key}' in request body`,
         });
+
+    const newMessage = {
+      conversation_id: id,
+      sender_id: req.user.id,
+      // sender_status, - will use table default
+      receiver_id: user_2,
+      // receiver_status, - will use table default
+      content: 'Message in Progress...',
+    };
 
     MessageService.insertMessage(req.app.get("db"), newMessage)
       .then((message) => {
@@ -44,25 +43,6 @@ messageRouter
           .json(MessageService.serializeMessage(message));
       })
       .catch(next);
-  });
-
-messageRouter
-  .route("/:message_id")
-  .all(requireAuth)
-  .all(checkMessageExists)
-
-  // open specific message - need specific id ... from params, use getbyID
-  .get((req, res) => {
-    MessageService.getByID(
-      req.app.get('db'),
-      req.params.message_id
-    )
-      .then(message => 
-        res
-          .status(200)
-          .json(MessageService.serializeMessage(message))
-      )
-      
   });
 
 messageRouter
@@ -77,7 +57,7 @@ messageRouter
     const numberOfValues = Object.values(updatedMessageField).filter(Boolean).length
     if (numberOfValues === 0)
       return res.status(400).json({
-        error: { message: `Request body must contain content`}
+        error: `Request body must contain content`
       })
 
     MessageService.updateMessage(
@@ -85,7 +65,6 @@ messageRouter
       req.params.message_id,
       updatedMessageField
     )
-
       .then(message => {
         res
           .status(200)
@@ -103,7 +82,6 @@ messageRouter
     const {content, sender_status, receiver_status, date_sent} = req.body
     const updatedMessageFields = {content, sender_status, receiver_status, date_sent}
     // sender_status --> 'Sent' || receiver_status --> 'Received' 
-
     for(const [key, value] of Object.entries(updatedMessageFields))
       if (value == null)
         return res.status(400).json({
@@ -114,8 +92,21 @@ messageRouter
       req.params.message_id,
       updatedMessageFields
     )
+      .then(async message => {
+        const {user_1_turn, user_2_turn} = await ConversationService.getConversationTurns(
+          req.app.get('db'),
+          message.conversation_id
+        )
+        await MessageService.setConversationTurns(
+          req.app.get('db'),
+          message.conversation_id,
+          !user_1_turn,
+          !user_2_turn
+        )
+        return message
+      })
       .then(message => {
-        res
+        return res
           .status(200)
           .json(MessageService.serializeMessage(message)) 
       })
