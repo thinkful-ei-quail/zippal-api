@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const MessageService = require("./message-service");
 const { requireAuth } = require("../middleware/jwt-auth");
+const ConversationService = require("../conversation/conversation-service");
 
 const messageRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -92,9 +93,15 @@ messageRouter
       updatedMessageFields
     )
       .then(async message => {
-        await MessageService.setConversationTurns(
+        const {user_1_turn, user_2_turn} = await ConversationService.getConversationTurns(
           req.app.get('db'),
           message.conversation_id
+        )
+        await MessageService.setConversationTurns(
+          req.app.get('db'),
+          message.conversation_id,
+          !user_1_turn,
+          !user_2_turn
         )
         return message
       })
