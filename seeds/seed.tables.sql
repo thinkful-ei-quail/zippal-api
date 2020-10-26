@@ -21,7 +21,7 @@ VALUES
   (1, 1, 2, true, false), -- have unread new message
   (2, 1, 3, true, false), -- on 1st message, draft
   (3, 1, 4, false, true), -- 1 message sent, unread by user_2
-  (4, 1, 5, false, true); -- 2 messages sent, user_2 has draft of 3
+  (4, 1, 5, true, false); -- 2 messages sent, user_1 has draft of 3
 
 INSERT INTO "message" ("id", "conversation_id", "sender_id", "sender_status", "receiver_id", "receiver_status", "content", "date_sent", "is_read")
 VALUES

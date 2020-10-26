@@ -15,8 +15,6 @@ userRouter
         req.user.id
       )
 
-      console.log(req.user.id)
-
       res.json(user)
     } catch (error) {
       next(error)

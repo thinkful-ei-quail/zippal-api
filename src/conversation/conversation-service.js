@@ -22,6 +22,13 @@ const ConversationService = {
       })
   },
 
+  getConversationTurns(db, id) {
+    return db('conversation')
+      .select('user_1_turn', 'user_2_turn')
+      .where({ id })
+      .first()
+  },
+
   getDisplayNameAndIcon(db, userId) {
     return db('user')
       .select('display_name', 'fa_icon')
