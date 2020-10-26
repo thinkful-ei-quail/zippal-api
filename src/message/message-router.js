@@ -110,11 +110,10 @@ messageRouter
       updatedMessageFields
     )
       .then(async message => {
-        const convo = await MessageService.setConversationTurns(
+        await MessageService.setConversationTurns(
           req.app.get('db'),
           message.conversation_id
         )
-        console.log(convo)
         return message
       })
       .then(message => {
