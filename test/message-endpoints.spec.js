@@ -27,14 +27,12 @@ describe('Message Endpoints', () => {
       await helpers.seedMessages(db, testMessages)
     })
 
-    const requiredFields = ['conversation_id', 'sender_id', 'receiver_id', 'content']
+    const requiredFields = ['id', 'user_2']
 
     requiredFields.forEach(field => {
       const newMessage = {
-        conversation_id: 1,
-        sender_id: 2,
-        receiver_id: 1,
-        content: 'Test message!!!!!'
+        id: 1,
+        user_2: 1,
       }
 
       it(`responds 400 required error when '${field}' is missing`, () => {
@@ -52,10 +50,8 @@ describe('Message Endpoints', () => {
     it('responds 201, serialized message when new message successfully created', () => {
       const conversation = testConvos[1] //user 1 & user 3
       const validMessage = {
-        conversation_id: conversation.id,
-        sender_id: testUsers[0].id,
-        receiver_id: testUsers[2].id,
-        content: ''
+        id: conversation.id,
+        user_2: testUsers[2].id,
       }
 
       return supertest(app)
@@ -70,7 +66,7 @@ describe('Message Endpoints', () => {
           expect(res.body.sender_status).to.eql('Pending')
           expect(res.body).to.have.property('receiver_status')
           expect(res.body.receiver_status).to.eql('Awaiting Message')
-          expect(res.body.content).to.eql('Message in progress...')
+          expect(res.body.content).to.eql('Message in Progress...')
           expect(res.body).to.have.property('date_sent')
           expect(res.body.date_sent).to.eql(null)
           expect(res.body).to.have.property('is_read')
@@ -209,8 +205,8 @@ describe('Message Endpoints', () => {
           expect(res.body).to.have.property('is_read')
           expect(res.body.is_read).to.be.false
         })
-        .expect(res => {
-          db
+        .expect(async res => {
+          await db
             .from('conversation')
             .where('id', res.body.conversation_id)
             .first()

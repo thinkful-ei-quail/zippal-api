@@ -17,6 +17,14 @@ messageRouter
       user_2,
     } = req.body;
 
+    const requiredFields = { id, user_2 }
+
+    for (const [key, value] of Object.entries(requiredFields))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`,
+        });
+
     const newMessage = {
       conversation_id: id,
       sender_id: req.user.id,
@@ -25,12 +33,6 @@ messageRouter
       // receiver_status, - will use table default
       content: 'Message in Progress...',
     };
-
-    for (const [key, value] of Object.entries(newMessage))
-      if (value == null)
-        return res.status(400).json({
-          error: `Missing '${key}' in request body`,
-        });
 
     MessageService.insertMessage(req.app.get("db"), newMessage)
       .then((message) => {
@@ -41,26 +43,6 @@ messageRouter
       })
       .catch(next);
   });
-
-// THIS ROUTE IS LIKELY REDUNDANT. COMMENTED OUT FOR NOW //
-// messageRouter
-//   .route("/:message_id")
-//   .all(requireAuth)
-//   .all(checkMessageExists)
-
-//   // open specific message - need specific id ... from params, use getbyID
-//   .get((req, res) => {
-//     MessageService.getByID(
-//       req.app.get('db'),
-//       req.params.message_id
-//     )
-//       .then(message => 
-//         res
-//           .status(200)
-//           .json(MessageService.serializeMessage(message))
-//       )
-      
-//   });
 
 messageRouter
   .route("/:message_id/save")
@@ -117,7 +99,7 @@ messageRouter
         return message
       })
       .then(message => {
-        res
+        return res
           .status(200)
           .json(MessageService.serializeMessage(message)) 
       })
