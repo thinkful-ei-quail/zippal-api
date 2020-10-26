@@ -94,9 +94,9 @@ userRouter
       req.user.id,
       updatedFields
     ).then((user) => {
-      res
-        .status(201)
-        .json(UserService.serializeUser(user))
+      return res
+        .status(200)
+        .json(UserService.serializeUser(user[0]))
     })
       .catch(next)
 

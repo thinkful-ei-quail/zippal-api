@@ -174,7 +174,6 @@ describe('Conversation Endpoints', function () {
           expect(res.body).to.have.property('is_active')
           expect(res.body).to.have.property('user_1_turn')
           expect(res.body).to.have.property('user_2_turn')
-          expect(res.body).to.have.property('username')
           expect(res.body).to.have.property('display_name')
           expect(res.body).to.have.property('fa_icon')
           expect(res.body).to.not.have.property('password')

@@ -59,6 +59,8 @@ function makeConvoArray() {
       id: 3,
       user_1: 4,
       user_2: 2,
+      user_1_turn: false,
+      user_2_turn: true
     },
     {
       id: 4,
