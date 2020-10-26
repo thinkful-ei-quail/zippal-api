@@ -60,6 +60,10 @@ const MessageService = {
   setConversationTurns(db, conversation_id) {
     return db('conversation')
       .where('id', conversation_id)
+      .update({
+        user_1_turn: db.raw('NOT ??',  ['user_1_turn']),
+        user_2_turn: db.raw('NOT ??',  ['user_2_turn'])
+      }, ['user_1_turn', 'user_2_turn'])
       
   },
 

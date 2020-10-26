@@ -205,7 +205,7 @@ describe('Conversation Endpoints', function () {
     })
   })
 
-  describe(`PATCH /api/conversation/:conversation_id`, () => {
+  describe(`PATCH /api/conversation/:conversation_id/deactivate`, () => {
     beforeEach('insert conversations', async () => {
       await helpers.seedUsers(db, testUsers)
       await helpers.seedConvos(db, testConvos)
@@ -216,7 +216,7 @@ describe('Conversation Endpoints', function () {
     
 
       return supertest(app)
-        .patch(`/api/conversation/${testConvos[1].id}`)
+        .patch(`/api/conversation/${testConvos[1].id}/deactivate`)
         .set('authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(204)
         .then(async () => {

@@ -1,5 +1,4 @@
 const express = require('express')
-const path = require('path')
 const ConversationService = require('./conversation-service.js')
 const { requireAuth } = require('../middleware/jwt-auth')
 
@@ -52,7 +51,8 @@ conversationRouter
     } catch(error) {
       next(error)
     }
-  })  // Post - start a new conversation between two users
+  }) 
+  // Post - start a new conversation between two users
   .post(jsonBodyParser, async (req, res, next) => {
     try {
       const {user_2} = req.body;
@@ -66,7 +66,6 @@ conversationRouter
       const [ conversation ] = await ConversationService.beginNewConversation(req.app.get('db'), newConversation);
       const convoDetails = await ConversationService.getDisplayNameAndIcon(req.app.get('db'), user_2)
       const fullResponse = {...conversation, ...convoDetails, user_1: req.user.id, user_2}
-      // if no users are available for conversation then return 404
 
       await ConversationService.incrementConversationCounts(
         req.app.get('db'), 
@@ -154,9 +153,5 @@ conversationRouter
     }
   
   })
-  
-// todo establish endpoint for ending a conversation
- 
-
 
 module.exports = conversationRouter;
