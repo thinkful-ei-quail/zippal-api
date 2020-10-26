@@ -33,7 +33,7 @@ const UserService = {
   updateUser(db, userId, updateFields) {
     return db('user')
       .whereRaw('id = ?', [userId])
-      .update(updateFields,['display_name', 'username', 'bio', 'location', 'fa_icon'])
+      .update(updateFields,['*'])
   },
   getUserProfile(db, id) {
     return db
