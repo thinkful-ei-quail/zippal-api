@@ -31,11 +31,11 @@ Description: [....]
 ### API Documentation
 ---
 
-We use this codebase to access our datatables (user, conversation, message) in our database _server hosted on heroku_ with user information and their conversations.
+We use this codebase to access our datatables with user, conversation, and message data on the database _server hosted by heroku_.
 
-We also use this codebase to confirm user credentials with the help of JWT for authentication and bcrypt to hash user passwords. 
+We also use this codebase to confirm user credentials with the help of _JWT_ for authentication and _bcrypt_ to hash user passwords. 
 
-With the exception of our _registration and login_ our endpoints require JWT.
+With the exception of _registration and login_ all endpoints require _JWT_ .
 
 #### Endpoints
 
@@ -43,3 +43,36 @@ With the exception of our _registration and login_ our endpoints require JWT.
 * /api/user
 * /api/conversation
 * /api/message
+
+```text
+/api
+.
+├── /auth/token
+│   └── POST
+│       └── /
+│   └── PUT
+│       └── /
+├── /users
+│   └── GET
+│       ├── /
+│       └── /profile
+│   └── POST
+│       └── /
+│   └── PATCH
+│       └── /
+├── /conversation
+│   └── GET
+│       ├── /
+│       └── /find/:currentConversationIds
+│   └── POST
+│       └── /
+│   └── PATCH
+│       └── /:conversation_id/deactivate
+├── /message
+│   └── POST
+│       └── /
+│   └── PATCH
+│       ├── /:message_id/save
+│       ├── /:message_id/send
+│       └── /:message_id/read
+```
