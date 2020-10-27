@@ -105,7 +105,7 @@ Authorization: Bearer ${token}
 ### [/api/user] User Endpoints 
 
 #### [/] GET 
-    Request User data (contains active conversations)
+    Request User's data
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -116,6 +116,7 @@ Authorization: Bearer ${token}
   display_name: String,
   active_conversations: String,
   bio: String,
+  active_conversations: Number,
   location: String,
   fa_icon: String
 }
@@ -123,7 +124,7 @@ Authorization: Bearer ${token}
 ```
 
 #### [/profile] GET
-    Request User profile data (for react-context) doesn't contain active conversations
+    Request User's profile data, serialized with xss (for react-context) 
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -135,6 +136,7 @@ Authorization: Bearer ${token}
   username: xss(String),
   location: xss(String),
   bio: xss(String),
+  active_conversations: Number,
   fa_icon: String
 }
 ```
