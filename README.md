@@ -73,10 +73,10 @@ With the exception of _registration and login_ all endpoints require _JWT_ .
 ```
 --- 
 
-### Auth Endpoints [/api/auth]
+### [/api/auth] Auth Endpoints 
 
-#### POST [/token]
-  Generating intial token upon successful login
+#### [/token] POST 
+    Generating intial token upon successful login
 ```js
 // req.body
 {
@@ -89,8 +89,8 @@ With the exception of _registration and login_ all endpoints require _JWT_ .
   authToken: String
 }
 ```
-#### PUT [/token]
-  Refreshing token
+#### [/token] PUT 
+    Refreshing token
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -101,3 +101,44 @@ Authorization: Bearer ${token}
 }
 ```
 ---
+
+### [/api/user] User Endpoints 
+
+#### [/] GET 
+    Request User data (contains active conversations)
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// res.body
+{
+  username: String,
+  display_name: String,
+  active_conversations: String,
+  bio: String,
+  location: String,
+  fa_icon: String
+}
+
+```
+
+#### [/profile] GET
+    Request User profile data (for react-context) doesn't contain active conversations
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// res.body
+{
+  id: String,
+  display_name: xss(String),
+  username: xss(String),
+  location: xss(String),
+  bio: xss(String),
+  fa_icon: String
+}
+```
+
+#### [/] POST
+
+#### [/] PATCH
