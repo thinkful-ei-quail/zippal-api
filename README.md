@@ -1,9 +1,12 @@
-# Zip Pal 
+# Zip Pal (V 1.0)
 ### A pen pal app (api)
 #### [Hosted Live on Vercel](https://zippal.vercel.app/)
 
-Description: [....]
- 
+	In the times of Covid 19 and quarantine, we’ve all experienced isolation. Rush University’s research has shown that chronic social isolation increases the risk of mental health issues like depression, anxiety and substance abuse, as well as raises the risk of dementia in older adults. It can also lead to chronic conditions like high blood pressure, heart disease and diabetes.
+
+	Zip pal was created with the idea of promoting conversation to help alleviate social isolation - and hopefully promote productive discourse in our increasingly polarized world. Zip Pal, using our find-a-pal algorithm, connects 2 users together and allows them to talk about shared interests or anything they'd like. 
+    
+    When registering Users can add their location and a brief bio, this information is useful when other Users are paired with them for a new conversation. When using the find-a-pal feauture, Users can skip to the next Pal or start a new conversation. Users can have up to 5 conversations going at one time and they can leave a conversation at any time.
 ---
 
 #### Tech Stack & Dependencies
@@ -148,3 +151,35 @@ Authorization: Bearer ${token}
 #### [/] PATCH
 
 ---
+### [/api/conversation] Conversation Endpoints
+
+#### [/] GET 
+
+#### [/find/:currentConversationIds] GET
+
+#### [/] POST
+
+#### [/:conversation_id/deactivate] PATCH
+
+---
+
+### [/api/message] Message Endpoints
+
+#### [/] POST
+
+#### [/:message_id/save] PATCH
+
+#### [/::message_id/send] PATCH
+
+#### [/::message_id/read] PATCH
+
+---
+
+## Zip Pal is brought to you by 
+
+* [John Bowser](https://github.com/jgbowser)
+* [Phillip 'Lip' Cowan](https://github.com/lipcowan)
+* [Mathew Murray](https://github.com/MathewMurray)
+* [Ryan Whitmore](https://github.com/warptrail)
+
+--- 
