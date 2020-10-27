@@ -148,8 +148,55 @@ Authorization: Bearer ${token}
 ```
 
 #### [/] POST
+  * Creates a new User account
+
+```js
+// req.body (no auth needed, password will be hashed prior to storing)
+{
+    password: String 
+    // Password must be 8-72 characters long
+    // and contain at least one upper case, lower case, special character, and number
+    username: String
+    display_name: String
+}
+
+// res.body (returns serialized user, does *not* return password)
+{
+  id: String,
+  display_name: xss(String),
+  username: xss(String),
+  location: xss(String),
+  bio: xss(String),
+  active_conversations: Number,
+  fa_icon: String
+}
+```
 
 #### [/] PATCH
+
+```js
+
+// req.header
+Authorization: Bearer ${token}
+
+// req.body (must contain at least one of the fields)
+{ 
+    bio: String
+    location: String 
+    fa_icon:String
+}
+
+// res.body (returns serialized user, does *not* return password)
+{
+  id: String,
+  display_name: xss(String),
+  username: xss(String),
+  location: xss(String),
+  bio: xss(String),
+  active_conversations: Number,
+  fa_icon: String
+}
+```
 
 ---
 ### [/api/conversation] Conversation Endpoints
