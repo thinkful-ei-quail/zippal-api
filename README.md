@@ -28,7 +28,7 @@ Description: [....]
   * [xss](https://github.com/leizongmin/js-xss) 
 
 ---
-### API Documentation
+## API Documentation
 ---
 
 We use this codebase to access our datatables with user, conversation, and message data on the database _server hosted by heroku_.
@@ -37,7 +37,7 @@ We also use this codebase to confirm user credentials with the help of _JWT_ for
 
 With the exception of _registration and login_ all endpoints require _JWT_ .
 
-#### API Overview
+### API Overview
 
 ```text
 /api
@@ -73,9 +73,31 @@ With the exception of _registration and login_ all endpoints require _JWT_ .
 ```
 --- 
 
-#### Endpoints
+### Auth Endpoints [/api/auth]
 
-* /api/auth 
-* /api/user
-* /api/conversation
-* /api/message
+#### POST [/token]
+  Generating intial token upon successful login
+```js
+// req.body
+{
+  username: String,
+  password: String
+}
+
+// res.body
+{
+  authToken: String
+}
+```
+#### PUT [/token]
+  Refreshing token
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// res.body
+{
+  authToken: ${token}
+}
+```
+---
