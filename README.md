@@ -148,13 +148,110 @@ Authorization: Bearer ${token}
 ```
 
 #### [/] POST
+  * Creates a new User account
+
+```js
+// req.body (no auth needed, password will be hashed prior to storing)
+{
+    password: String 
+    // Password must be 8-72 characters long
+    // and contain at least one upper case, lower case, special character, and number
+    username: String
+    display_name: String
+}
+
+// res.body (returns serialized user, does *not* return password)
+{
+  id: String,
+  display_name: xss(String),
+  username: xss(String),
+  location: xss(String),
+  bio: xss(String),
+  active_conversations: Number,
+  fa_icon: String
+}
+```
 
 #### [/] PATCH
+  * Updates User's information displayed on their profiles
+
+```js
+
+// req.header
+Authorization: Bearer ${token}
+
+// req.body (must contain at least one of the fields)
+{ 
+    bio: String
+    location: String 
+    fa_icon:String
+}
+
+// res.body (returns serialized user, does *not* return password)
+{
+  id: String,
+  display_name: xss(String),
+  username: xss(String),
+  location: xss(String),
+  bio: xss(String),
+  active_conversations: Number,
+  fa_icon: String
+}
+```
 
 ---
 ### [/api/conversation] Conversation Endpoints
 
 #### [/] GET 
+  * Requests all existing conversations and messages
+
+```js
+
+// req.header
+Authorization: Bearer ${token}
+
+// req.body - req.user.id
+
+// res.body - 
+// object with conversations messages objects {c:[{},{}],m:[[{},{}],[{},{}]]}
+// conversations object contains an array of conversation objects
+// messages oject contains and array of arrays of conversation message objects (by conversation id)
+{
+  conversations:
+    [  
+        {
+            date_created: "2020-10-27T19:59:01.405Z"
+            fa_icon: "user-circle"
+            id: 7
+            is_active: true
+            pal_name: "Phillip"
+            user_1: 1
+            user_1_turn: false
+            user_2: 9
+            user_2_turn: true
+        }, 
+        {...},
+    ...],       
+  messages: 
+    [
+        [
+            {
+                content: "Message iwofhwpvw"
+                conversation_id: 7
+                date_sent: "2020-10-27T19:59:04.628Z"
+                id: 10
+                is_read: false
+                receiver_id: 9
+                receiver_status: "Received"
+                sender_id: 1
+                sender_status: "Sent"
+            },
+            {...},
+        ],
+        [{...}],
+    ]
+} 
+```
 
 #### [/find/:currentConversationIds] GET
 
