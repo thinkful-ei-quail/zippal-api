@@ -1,10 +1,12 @@
 # Zip Pal 
-#### A pen pal app (api)
+### A pen pal app (api)
 #### [Hosted Live on Vercel](https://zippal.vercel.app/)
 
 Description: [....]
+ 
+---
 
-#### Tech Stack
+#### Tech Stack & Dependencies
  ##### Node.js 
   * [Express](http://expressjs.com/)
    * [Cors](https://github.com/expressjs/cors#readme)
@@ -28,6 +30,12 @@ Description: [....]
 ---
 ### API Documentation
 ---
+
+We use this codebase to access our datatables (user, conversation, message) in our database _server hosted on heroku_ with user information and their conversations.
+
+We also use this codebase to confirm user credentials with the help of JWT for authentication and bcrypt to hash user passwords. 
+
+With the exception of our _registration and login_ our endpoints require JWT.
 
 #### Endpoints
 
