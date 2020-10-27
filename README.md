@@ -76,7 +76,7 @@ With the exception of _registration and login_ all endpoints require _JWT_ .
 ### [/api/auth] Auth Endpoints 
 
 #### [/token] POST 
-    Generating intial token upon successful login
+    _Generating intial token upon successful login_
 ```js
 // req.body
 {
@@ -90,7 +90,7 @@ With the exception of _registration and login_ all endpoints require _JWT_ .
 }
 ```
 #### [/token] PUT 
-    Refreshing token
+    _Refreshing token_
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -105,7 +105,7 @@ Authorization: Bearer ${token}
 ### [/api/user] User Endpoints 
 
 #### [/] GET 
-    Request User's data
+    _Request User's data_
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -124,7 +124,7 @@ Authorization: Bearer ${token}
 ```
 
 #### [/profile] GET
-    Request User's profile data, serialized with xss (for react-context) 
+    _Request User's profile data, serialized with xss (for react-context)_
 ```js
 // req.header
 Authorization: Bearer ${token}
