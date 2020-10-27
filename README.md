@@ -37,12 +37,7 @@ We also use this codebase to confirm user credentials with the help of _JWT_ for
 
 With the exception of _registration and login_ all endpoints require _JWT_ .
 
-#### Endpoints
-
-* /api/auth 
-* /api/user
-* /api/conversation
-* /api/message
+#### API Overview
 
 ```text
 /api
@@ -76,3 +71,11 @@ With the exception of _registration and login_ all endpoints require _JWT_ .
 │       ├── /:message_id/send
 │       └── /:message_id/read
 ```
+--- 
+
+#### Endpoints
+
+* /api/auth 
+* /api/user
+* /api/conversation
+* /api/message
