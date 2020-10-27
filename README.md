@@ -2,11 +2,11 @@
 ### A pen pal app (api)
 #### [Hosted Live on Vercel](https://zippal.vercel.app/)
 
--- In the times of Covid 19 and quarantine, we’ve all experienced isolation. Rush University’s research has shown that chronic social isolation increases the risk of mental health issues like depression, anxiety and substance abuse, as well as raises the risk of dementia in older adults. It can also lead to chronic conditions like high blood pressure, heart disease and diabetes.
+- In the times of Covid 19 and quarantine, we’ve all experienced isolation. Rush University’s research has shown that _chronic social isolation_ increases the risk of mental health issues like depression, anxiety and substance abuse, as well as raises the risk of dementia in older adults. It can also lead to chronic conditions like high blood pressure, heart disease and diabetes.
 
--- _Zip Pal_ was created with the idea of promoting conversation to help alleviate social isolation - and hopefully promote productive discourse in our increasingly polarized world. Zip Pal, using our find-a-pal algorithm, connects 2 users together and allows them to talk about shared interests or anything they'd like. 
+- _Zip Pal_ was created with the idea of promoting conversation to help alleviate social isolation - and hopefully promote productive discourse in our increasingly polarized world. _Zip Pal_ , using our _find-a-pal_ algorithm, provides 2 random Users (Pals) the opportunity to connect and talk about shared interests or anything they'd like. 
 
--- When registering, Users can add their location and a brief bio, this information is useful when _Pals_ are paired with them in a new conversation. When using the _find-a-pal_ feature, Users can start a new conversation with that _Pal_ or find another _Pal_. Currently, Users can have up to 5 conversations going at one time and they can leave a conversation at any time. 
+- When signing up, Users can add their location and a brief bio, this information is useful when _Pals_ are paired with them in a new conversation. When using the _find-a-pal_ feature, Users can start a new conversation with that _Pal_ or find another _Pal_. Currently, Users can have up to 5 conversations going at one time and they can leave a conversation at any time. 
 
 ---
 
