@@ -105,7 +105,8 @@ Authorization: Bearer ${token}
 ### [/api/user] User Endpoints 
 
 #### [/] GET 
-    _Request User's data_
+    Request User's data
+
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -120,11 +121,11 @@ Authorization: Bearer ${token}
   location: String,
   fa_icon: String
 }
-
 ```
 
 #### [/profile] GET
-    _Request User's profile data, serialized with xss (for react-context)_
+    Request User's profile data, serialized with xss (for react-context)
+
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -144,3 +145,5 @@ Authorization: Bearer ${token}
 #### [/] POST
 
 #### [/] PATCH
+
+---
