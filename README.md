@@ -1,53 +1,150 @@
-# Express Boilerplate!
+# Zip Pal 
+### A pen pal app (api)
+#### [Hosted Live on Vercel](https://zippal.vercel.app/)
 
-This is a boilerplate project used for starting new projects!
+Description: [....]
+ 
+---
 
-## Set up
+#### Tech Stack & Dependencies
+ ##### Node.js 
+  * [Express](http://expressjs.com/)
+   * [Cors](https://github.com/expressjs/cors#readme)
+  * [Helmet](https://helmetjs.github.io/)
+ ##### PostgreSQL 
+  * [pg](https://github.com/brianc/node-postgres) 
+  * [Knex](https://knexjs.org/)
+  * [Postgrator](https://github.com/rickbergfalk/postgrator#readme)
+ ##### _Testing_
+  * [Chai](http://chaijs.com/)
+  * [Mocha](https://mochajs.org/)
+  * [Supertest](https://github.com/visionmedia/supertest#readme)
+ ##### _Logging_
+  * [Morgan](https://github.com/expressjs/morgan#readme)
+  * [Winston](https://github.com/winstonjs/winston#readme)
+ ##### _Authorization & Authentication_
+  * [Bcrypt.js](https://github.com/dcodeIO/bcrypt.js#readme)
+  * [JWT](https://github.com/auth0/node-jsonwebtoken#readme)
+  * [xss](https://github.com/leizongmin/js-xss) 
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+---
+## API Documentation
+---
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
-7. set up express, morgan, cors, and helmet in the `app.js`
-8. create a `logger.js` file in src for winston and set up
-9. create a `postgrator-config.js` file in root directory to set up postgrator
-10. edit the `config.js` file to manage env variables
-11. check below for dependency explanations and links to docs
+We use this codebase to access our datatables with user, conversation, and message data on the database _server hosted by heroku_.
 
+We also use this codebase to confirm user credentials with the help of _JWT_ for authentication and _bcrypt_ to hash user passwords. 
 
-## Scripts
+With the exception of _registration and login_ all endpoints require _JWT_ .
 
-Start the application `npm start`
+### API Overview
 
-Start nodemon for the application `npm run dev`
+```text
+/api
+.
+├── /auth/token
+│   └── POST
+│       └── /
+│   └── PUT
+│       └── /
+├── /users
+│   └── GET
+│       ├── /
+│       └── /profile
+│   └── POST
+│       └── /
+│   └── PATCH
+│       └── /
+├── /conversation
+│   └── GET
+│       ├── /
+│       └── /find/:currentConversationIds
+│   └── POST
+│       └── /
+│   └── PATCH
+│       └── /:conversation_id/deactivate
+├── /message
+│   └── POST
+│       └── /
+│   └── PATCH
+│       ├── /:message_id/save
+│       ├── /:message_id/send
+│       └── /:message_id/read
+```
+--- 
 
-Run the tests `npm test`
+### [/api/auth] Auth Endpoints 
 
-build tables in database using migration scripts `npm run migrate [#]`
+#### [/token] POST 
+  * Generating intial token upon successful login
 
-build tables in test database for testing purposes `npm run migrate:test`
+```js
+// req.body
+{
+  username: String,
+  password: String
+}
 
-## Deploying
+// res.body
+{
+  authToken: String
+}
+```
+#### [/token] PUT 
+  * Refreshing token
+```js
+// req.header
+Authorization: Bearer ${token}
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+// res.body
+{
+  authToken: ${token}
+}
+```
+---
 
-## Dependencies and Docs
+### [/api/user] User Endpoints 
 
-1. cors - middleware for enabling cross origin resource sharing [cors docs](https://www.npmjs.com/package/cors)
-2. dotenv - loads variables from .env files to process.env [dotenv docs](https://www.npmjs.com/package/dotenv)
-3. express - Node.js API web framework [express docs](https://expressjs.com/)
-4. helmet - secure express apps by setting/hiding http headers [helmet docs](https://helmetjs.github.io/)
-5. knex - SQL query builder for postgreSQL and various other SQL databases [knex docs](https://helmetjs.github.io/)
-6. morgan - http request logger middleware [morgan docs](https://www.npmjs.com/package/morgan)
-7. pg - postgres drivers needed for winston and knex [pg docs](https://www.npmjs.com/package/pg)
-8. winston - creates a log file of http requests [winston docs](https://www.npmjs.com/package/winston)
-9. xss - filters cross site scripting from user input [xss docs](https://www.npmjs.com/package/xss)
-10. chai - test assertion library, pairs with mocha [chai docs](https://www.chaijs.com/)
-11. mocha - test framework [mocha docs](https://mochajs.org/)
-12. nodemon - monitors for code changes and refreshes server [nodemon docs](https://nodemon.io/)
-13. postgrator(-cli) - command line SQL database migration tool [postgrator docs](https://www.npmjs.com/package/postgrator-cli?activeTab=readme)
-14. supertest - http assertion tool to be used with mocha/chai [supertest docs](https://www.npmjs.com/package/supertest)
+#### [/] GET 
+  * Request User's data
+
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// res.body
+{
+  username: String,
+  display_name: String,
+  active_conversations: String,
+  bio: String,
+  active_conversations: Number,
+  location: String,
+  fa_icon: String
+}
+```
+
+#### [/profile] GET
+  * Request User's profile data, serialized with xss (for react-context)
+
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// res.body
+{
+  id: String,
+  display_name: xss(String),
+  username: xss(String),
+  location: xss(String),
+  bio: xss(String),
+  active_conversations: Number,
+  fa_icon: String
+}
+```
+
+#### [/] POST
+
+#### [/] PATCH
+
+---

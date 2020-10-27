@@ -110,7 +110,7 @@ userRouter
       )
       res
         .status(200)
-        .json(userInfo)
+        .json(UserService.serializeUser(userInfo))
     } catch (error) {
       next(error)
     }

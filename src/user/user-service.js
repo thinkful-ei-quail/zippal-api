@@ -42,6 +42,7 @@ const UserService = {
       .select(
         'display_name',
         'bio',
+        'active_conversations',
         'location',
         'id',
         'username',
