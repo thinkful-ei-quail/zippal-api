@@ -254,11 +254,61 @@ Authorization: Bearer ${token}
 ```
 
 #### [/find/:currentConversationIds] GET
+  * Find-a-pal - params used to filter for any userIDs, to avoid any repeats
 
+```js
+// example /find/12%2014%20 (users 1,2 and 1,4 are already in a conversation)
+
+// req.header
+Authorization: Bearer ${token}
+
+// res.body - returns RandomUser object
+
+{
+    id: Number,
+    display_name: String,
+    username: String,
+    bio: String,
+    location: String,
+    fa_icon: String
+}
+```
 #### [/] POST
+  * Create a new conversation (with new pal!)
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body - UserId of new pal, User_1: req.user.id
+{
+    user_2: Number
+}
+
+// res.body - object with conversation data, newPal_icon, newPal_displayName
+
+{ 
+    id: Number,
+    user_1: Number,
+    user_2: Number,
+    date_created: Date,
+    is_active: Boolean,
+    user_1_turn: Boolean,
+    user_2_turn: Boolean,
+// ^ above is returned upon new entry to conversation table, added to response object
+// below is added to response object with seperate query for user_2's data
+    display_name: String,
+    fa_icon: String
+}
+```
 #### [/:conversation_id/deactivate] PATCH
+```js
+// req.header
+Authorization: Bearer ${token}
 
+// uses conversation's id from req.params
+// returns 204, no res.body
+```
 ---
 
 ### [/api/message] Message Endpoints
