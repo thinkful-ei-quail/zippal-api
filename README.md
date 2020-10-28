@@ -1,6 +1,7 @@
 # Zip Pal (V 1.0)
 ### A pen pal app (api)
 #### [Hosted Live on Vercel](https://zippal.vercel.app/)
+#### [Client Repo](https://github.com/thinkful-ei-quail/zippal-client)
 
 In the times of Covid 19 and quarantine, we’ve all experienced isolation. Rush University’s research has shown that _chronic social isolation_ increases the risk of mental health issues like depression, anxiety and substance abuse, as well as raises the risk of dementia in older adults. It can also lead to chronic conditions like high blood pressure, heart disease and diabetes.
 
@@ -343,7 +344,7 @@ Authorization: Bearer ${token}
 ```
 #### [/:message_id/save] PATCH]
   * Save pending message - updates message.content value
-  
+
 ```js
 // req.header
 Authorization: Bearer ${token}
