@@ -254,30 +254,179 @@ Authorization: Bearer ${token}
 ```
 
 #### [/find/:currentConversationIds] GET
+  * Find-a-pal - params used to filter for any userIDs, to avoid any repeats
 
+```js
+// example /find/12%2014%20 (users 1,2 and 1,4 are already in a conversation)
+
+// req.header
+Authorization: Bearer ${token}
+
+// res.body - returns RandomUser object
+
+{
+    id: Number,
+    display_name: String,
+    username: String,
+    bio: String,
+    location: String,
+    fa_icon: String
+}
+```
 #### [/] POST
+  * Create a new conversation (with new pal!)
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body - UserId of new pal, User_1: req.user.id
+{
+    user_2: Number
+}
+
+// res.body - object with conversation data, newPal_icon, newPal_displayName
+
+{ 
+    id: Number,
+    user_1: Number,
+    user_2: Number,
+    date_created: Date,
+    is_active: Boolean,
+    user_1_turn: Boolean,
+    user_2_turn: Boolean,
+// ^ above is returned upon new entry to conversation table, added to response object
+// below is added to response object with seperate query for user_2's data
+    display_name: String,
+    fa_icon: String
+}
+```
 #### [/:conversation_id/deactivate] PATCH
+  * Leave a conversation
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// uses conversation's id from req.params
+// returns 204, no res.body
+```
 ---
 
 ### [/api/message] Message Endpoints
 
 #### [/] POST
+  * Create a new message entry, requires user_2's id, and conversation_id
 
-#### [/:message_id/save] PATCH
+```js
+// req.header
+Authorization: Bearer ${token}
 
+// req.body 
+{
+    id: Number
+    user_2: Number
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number, // === req.body.id
+    sender_id: Number, 
+    sender_status: String, // 'Pending'
+    receiver_id: Number, // === req.body.user_2
+    receiver_status: String, // 'Awaiting Message' 
+    content: String, // 'Message in progress...'
+    date_sent: Date // null,
+    is_read: Boolean // false
+}
+```
+#### [/:message_id/save] PATCH]
+  * Save pending message - updates message.content value
+  
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body 
+{
+    content: String
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number, //
+    sender_id: Number, 
+    sender_status: String, // 'Pending'
+    receiver_id: Number, //
+    receiver_status: String, // 'Awaiting Message' 
+    content: String, // === res.body.content
+    date_sent: Date, // null
+    is_read: Boolean // false
+}
+```
 #### [/::message_id/send] PATCH
+  * Send message - updates message.content, message.sender_status, message.receiver_status, and date_sent
+  * Also updates conversation.user_1_turn and conversation.user_2_turn 
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body 
+{
+    content: String,
+    sender_status: 'Sent',
+    receiver_status: 'Received',
+    date_sent: Date // Now()
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number, //
+    sender_id: Number, 
+    sender_status: String, // === req.body.sender_status
+    receiver_id: Number, //
+    receiver_status: String, // === req.body.receiver_status
+    content: String, // === res.body.content
+    date_sent: Date, // === res.body.date_sent,
+    is_read: Boolean // false
+}
+```
 #### [/::message_id/read] PATCH
+  * Mark message as read - updates message.sender_status, message.receiver_status, and is_read
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body 
+{
+    sender_status: 'Awaiting Reply',
+    receiver_status: 'Read',
+    is_read: true
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number,
+    sender_id: Number, 
+    sender_status: String, // === req.body.sender_status
+    receiver_id: Number, //
+    receiver_status: String, // === req.body.receiver_status
+    content: String,
+    date_sent: Date,
+    is_read: Boolean // === res.body.is_read
+}
+```
 ---
-
 ## Zip Pal is brought to you by 
 
 * [John Bowser](https://github.com/jgbowser)
 * [Phillip 'Lip' Cowan](https://github.com/lipcowan)
 * [Mathew Murray](https://github.com/MathewMurray)
 * [Ryan Whitmore](https://github.com/warptrail)
-
 --- 
