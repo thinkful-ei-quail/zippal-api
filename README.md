@@ -302,6 +302,8 @@ Authorization: Bearer ${token}
 }
 ```
 #### [/:conversation_id/deactivate] PATCH
+  * Leave a conversation
+
 ```js
 // req.header
 Authorization: Bearer ${token}
@@ -314,20 +316,117 @@ Authorization: Bearer ${token}
 ### [/api/message] Message Endpoints
 
 #### [/] POST
+  * Create a new message entry, requires user_2's id, and conversation_id
 
-#### [/:message_id/save] PATCH
+```js
+// req.header
+Authorization: Bearer ${token}
 
+// req.body 
+{
+    id: Number
+    user_2: Number
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number, // === req.body.id
+    sender_id: Number, 
+    sender_status: String, // 'Pending'
+    receiver_id: Number, // === req.body.user_2
+    receiver_status: String, // 'Awaiting Message' 
+    content: String, // 'Message in progress...'
+    date_sent: Date // null,
+    is_read: Boolean // false
+}
+```
+#### [/:message_id/save] PATCH]
+  * Save pending message - updates message.content value
+  
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body 
+{
+    content: String
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number, //
+    sender_id: Number, 
+    sender_status: String, // 'Pending'
+    receiver_id: Number, //
+    receiver_status: String, // 'Awaiting Message' 
+    content: String, // === res.body.content
+    date_sent: Date, // null
+    is_read: Boolean // false
+}
+```
 #### [/::message_id/send] PATCH
+  * Send message - updates message.content, message.sender_status, message.receiver_status, and date_sent
+  * Also updates conversation.user_1_turn and conversation.user_2_turn 
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body 
+{
+    content: String,
+    sender_status: 'Sent',
+    receiver_status: 'Received',
+    date_sent: Date // Now()
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number, //
+    sender_id: Number, 
+    sender_status: String, // === req.body.sender_status
+    receiver_id: Number, //
+    receiver_status: String, // === req.body.receiver_status
+    content: String, // === res.body.content
+    date_sent: Date, // === res.body.date_sent,
+    is_read: Boolean // false
+}
+```
 #### [/::message_id/read] PATCH
+  * Mark message as read - updates message.sender_status, message.receiver_status, and is_read
 
+```js
+// req.header
+Authorization: Bearer ${token}
+
+// req.body 
+{
+    sender_status: 'Awaiting Reply',
+    receiver_status: 'Read',
+    is_read: true
+}
+
+// res.body
+{
+    id: Number,
+    conversation_id: Number,
+    sender_id: Number, 
+    sender_status: String, // === req.body.sender_status
+    receiver_id: Number, //
+    receiver_status: String, // === req.body.receiver_status
+    content: String,
+    date_sent: Date,
+    is_read: Boolean // === res.body.is_read
+}
+```
 ---
-
 ## Zip Pal is brought to you by 
 
 * [John Bowser](https://github.com/jgbowser)
 * [Phillip 'Lip' Cowan](https://github.com/lipcowan)
 * [Mathew Murray](https://github.com/MathewMurray)
 * [Ryan Whitmore](https://github.com/warptrail)
-
 --- 
