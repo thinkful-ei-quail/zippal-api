@@ -7,14 +7,14 @@ TRUNCATE
 
 INSERT INTO "user" ("id", "username", "display_name", "password", "active_conversations", "bio", "location", "fa_icon")
 VALUES
-  (1, 'Test_user1', 'Mark', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 4, 'Just a test user on a website', 'USA', 'user-circle'),
-  (2, 'Test_user2', 'Tom', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 1, 'Just a test user on a website', 'USA', 'user-circle'),
-  (3, 'Test_user3', 'Travis', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 1, 'Just a test user on a website', 'USA', 'user-circle'),
-  (4, 'Test_user4', 'Hayley', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 1, 'Just a test user on a website', 'USA', 'user-circle'),
-  (5, 'Test_user5', 'Kasie', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'user-circle'),
-  (6, 'Test_user6', 'Anon', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'user-circle'),
-  (7, 'Test_user7', 'Plini', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'user-circle'),
-  (8, 'Test_user8', 'Morpheus', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'user-circle');
+  (1, 'Test_user1', 'Mark', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 4, 'Just a test user on a website', 'USA', 'laptop-code'),
+  (2, 'Test_user2', 'Tom', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 1, 'Just a test user on a website', 'USA', 'biking'),
+  (3, 'Test_user3', 'Travis', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 1, 'Just a test user on a website', 'USA', 'cat'),
+  (4, 'Test_user4', 'Hayley', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 1, 'Just a test user on a website', 'USA', 'music'),
+  (5, 'Test_user5', 'Kasie', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'gamepad'),
+  (6, 'Test_user6', 'Anon', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'dumbbell'),
+  (7, 'Test_user7', 'Plini', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'mountain'),
+  (8, 'Test_user8', 'Morpheus', '$2a$12$QbwJSK2p6QropmLqkRd3t.J4F2HwFEmS1cJ77brMa5SM1QcB3B9I2', 0, 'Just a test user on a website', 'USA', 'theater-masks');
 
 INSERT INTO "conversation" ("id", "user_1", "user_2", "user_1_turn", "user_2_turn")
 VALUES
