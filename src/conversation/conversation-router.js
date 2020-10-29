@@ -28,7 +28,7 @@ conversationRouter
           
         } else {
 
-          const { display_name } = await ConversationService.getDisplayNameAndIcon(
+          const { display_name, fa_icon } = await ConversationService.getDisplayNameAndIcon(
             req.app.get('db'),
             convo.user_1
           )
