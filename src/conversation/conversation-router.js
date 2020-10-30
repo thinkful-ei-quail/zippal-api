@@ -123,9 +123,6 @@ conversationRouter
     }
   })
 
-// accept conversation and then do post
-// or look for another person to pair with
-
 // single conversation
 conversationRouter
   .route('/:conversation_id/deactivate')
