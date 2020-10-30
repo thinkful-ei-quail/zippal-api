@@ -119,11 +119,4 @@ const ConversationService = {
 
 }
 
-// 1. See which active conversations are going on to see what users we have paired together
-// 2. When make a request, send an array of active conversations to get the count
-// 3. Query of the user table where active conversations less than 5 - returning user ids - filter out 
-// - have an array with only available user ids
-// 4. If user_2 already in five conversations, don't allow the pair and search for another user
-// 5. 
-
 module.exports = ConversationService
